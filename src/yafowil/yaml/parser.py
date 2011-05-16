@@ -64,11 +64,7 @@ class YAMLParser(object):
             )
         def create_children(node, children_defs):
             for child in children_defs:
-                keys = child.keys()
-                if len(keys) != 1:
-                    msg = u"Found %i widget names. Expected one" % len(keys)
-                    raise YAMLTransformationError(msg)
-                name = keys[0]
+                name = child.keys()[0]
                 child_def = child[name]
                 node[name] = call_factory(child_def)
                 create_children(node[name], child_def.get('widgets', []))

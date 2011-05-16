@@ -1,4 +1,4 @@
-Form definition with 2 fields::
+Sample form definition::
 
     >>> raw = """
     ... factory: form
@@ -101,7 +101,7 @@ Test YamlParser for yafowil forms::
     >>> parser.context
     <DummyContext object at ...>
 
-Parse definition values. If definition is a string.
+Parse definition values. If definition is a string::
 
     >>> parser.parse_definition_value(object())
     <object object at ...>
@@ -149,5 +149,27 @@ Parse definition values. If definition is a string.
           <option id="input-demoform-secondfield-c" value="c">c</option>
         </select>
       </div>
+    </form>
+    <BLANKLINE>
+
+    >>> raw = """
+    ... factory: form
+    ... name: demoform
+    ... props:
+    ...     action: demoaction
+    ... widgets:
+    ... - firstfield:
+    ...     factory: text
+    ...     value: context.some_attr
+    ... """
+    
+    >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
+    >>> with open(template_path, 'w') as file:
+    ...     file.write(raw)
+    
+    >>> form = YAMLParser(template_path, context=context)()
+    >>> pxml(form())
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+      <input class="text" id="input-demoform-firstfield" name="demoform.firstfield" type="text" value="context.some_attr"/>
     </form>
     <BLANKLINE>
