@@ -47,8 +47,9 @@ Create tmp env::
     >>> with open(template_path, 'w') as file:
     ...     file.write(raw)
     
-    >>> os.path.exists(template_path)
-    True
+    >>> trash_path = os.path.join(tempdir, 'trash.yaml')
+    >>> with open(trash_path, 'w') as file:
+    ...     file.write("{]")
 
 Create dummy context::
 
@@ -58,7 +59,30 @@ Create dummy context::
     
     >>> context = DummyContext()
 
-    >>> from yafowil.yaml import parseFromYaml
-    >>> form = parseFromYaml(template_path, context)
+Test YamlParser for yafowil forms::
+
+    >>> from yafowil.yaml import YAMLParser
+
+    >>> YAMLParser('inexistent_path', context=context)()
+    Traceback (most recent call last):
+      ...
+    YAMLTransformationError: File not found: 'inexistent_path'
     
+    >>> YAMLParser(trash_path, context=context)()
+    Traceback (most recent call last):
+      ...
+    YAMLTransformationError: Cannot parse YAML from given path '...trash.yaml'
     
+    >>> parser = YAMLParser(template_path, context=context)
+    >>> parser
+    <yafowil.yaml.parser.YAMLParser object at ...>
+    
+    >>> parser.path
+    '...tmpl.yaml'
+    
+    >>> parser.context
+    <DummyContext object at ...>
+
+    >>> from yafowil.yaml import parse_from_YAML
+    >>> form = parse_from_YAML(template_path, context)
+    >>> #form
