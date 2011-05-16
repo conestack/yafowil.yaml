@@ -173,3 +173,59 @@ Parse definition values. If definition is a string::
       <input class="text" id="input-demoform-firstfield" name="demoform.firstfield" type="text" value="context.some_attr"/>
     </form>
     <BLANKLINE>
+    
+    >>> raw = """
+    ... factory: form
+    ... name: demoform
+    ... props:
+    ...     action: demoaction
+    ... widgets:
+    ... - sometable:
+    ...     factory: table
+    ...     props:
+    ...         structural: True
+    ...     widgets:
+    ...     - row_1:
+    ...         factory: tr
+    ...         props:
+    ...             structural: True
+    ...         widgets:
+    ...         - somefield:
+    ...             factory: td:field:text
+    ... """
+    
+    >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
+    >>> with open(template_path, 'w') as file:
+    ...     file.write(raw)
+    
+    >>> form = YAMLParser(template_path, context=context)()
+    >>> pxml(form())
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+      <table>
+        <tr>
+          <td>
+            <div class="field" id="field-demoform-somefield">
+              <input class="text" id="input-demoform-somefield" name="demoform.somefield" type="text" value=""/>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <BLANKLINE>
+
+# XXX: discuss - should structural flag default to True for table elements?
+#    >>> raw = """
+#    ... factory: form
+#    ... name: demoform
+#    ... props:
+#    ...     action: demoaction
+#    ... widgets:
+#    ... - sometable:
+#    ...     factory: table
+#    ...     widgets:
+#    ...     - row_1:
+#    ...         factory: tr
+#    ...         widgets:
+#    ...         - somefield:
+#    ...             factory: td:field:text
+#    ... """
