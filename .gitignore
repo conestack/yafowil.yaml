@@ -1,3 +1,10 @@
 bin/
 eggs/
 parts/
+.installed.cfg
+.mr.developer.cfg
+develop-eggs/
+src/yafowil.yaml.egg-info/
+*.pyc
+*.pyo
+

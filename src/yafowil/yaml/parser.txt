@@ -1,0 +1,64 @@
+Form definition with 2 fields::
+
+    >>> raw = """
+    ... name: demoform
+    ... props:
+    ...     action: demoaction
+    ... widgets:
+    ... - firstfield:
+    ...     factory: field:label:error:text
+    ...     value: context.firstfield_value
+    ...     properties:
+    ...         label: First Field
+    ...         description: I am the description
+    ...         required: I am required
+    ... - secondfield:
+    ...     factory: field:label:error:select
+    ...     value: ['a', 'b']
+    ...     properties:
+    ...         label: Second Field
+    ...         multivalued: True
+    ...         vocabulary: yafowil.yaml.tests.test_vocab
+    ... """
+
+Check how yaml parses this::
+
+    >>> import yaml
+    >>> pprint(yaml.load(raw))
+    {'name': 'demoform',
+     'props': {'action': 'demoaction'},
+     'widgets': [{'firstfield': {'factory': 'field:label:error:text',
+                                 'properties': {'description': 'I am the description',
+                                                'label': 'First Field',
+                                                'required': 'I am required'},
+                                 'value': 'context.firstfield_value'}},
+                 {'secondfield': {'factory': 'field:label:error:select',
+                                  'properties': {'label': 'Second Field',
+                                                 'multivalued': True,
+                                                 'vocabulary': 'yafowil.yaml.tests.test_vocab'},
+                                  'value': ['a', 'b']}}]}
+
+Create tmp env::
+
+    >>> import os
+    >>> import tempfile
+    >>> tempdir = tempfile.mkdtemp()
+    >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
+    >>> with open(template_path, 'w') as file:
+    ...     file.write(raw)
+    
+    >>> os.path.exists(template_path)
+    True
+
+Create dummy context::
+
+    >>> class DummyContext(object):
+    ...     def firstfield_value(widget, data):
+    ...         return 'First value'
+    
+    >>> context = DummyContext()
+
+    >>> from yafowil.yaml import parseFromYaml
+    >>> form = parseFromYaml(template_path, context)
+    
+    

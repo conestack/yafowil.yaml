@@ -13,6 +13,12 @@ TESTFILES = [
 ]
 
 
+def test_vocab():
+    """Used by tests to determine package path
+    """
+    return ['a', 'b', 'c']
+
+
 def fxml(xml):
     et = etree.fromstring(xml)
     return etree.tostring(et, pretty_print=True)
