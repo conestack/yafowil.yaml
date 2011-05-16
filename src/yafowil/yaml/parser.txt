@@ -1,6 +1,7 @@
 Form definition with 2 fields::
 
     >>> raw = """
+    ... factory: form
     ... name: demoform
     ... props:
     ...     action: demoaction
@@ -13,26 +14,40 @@ Form definition with 2 fields::
     ...         description: I am the description
     ...         required: I am required
     ... - secondfield:
-    ...     factory: field:label:error:select
+    ...     factory: field:label:*custom_stuff:error:select
     ...     value: ['a', 'b']
     ...     properties:
     ...         label: Second Field
     ...         multivalued: True
     ...         vocabulary: yafowil.yaml.tests.test_vocab
+    ...     custom:
+    ...         custom_stuff:
+    ...             extractors:
+    ...                 - context.custom_extractor_1
+    ...                 - context.custom_extractor_2
+    ...             renderers: context.custom_renderer
+    ...             preprocessors: context.custom_preprocessor
+    ...             builders: context.custom_builder
     ... """
 
 Check how yaml parses this::
 
     >>> import yaml
     >>> pprint(yaml.load(raw))
-    {'name': 'demoform',
+    {'factory': 'form',
+     'name': 'demoform',
      'props': {'action': 'demoaction'},
      'widgets': [{'firstfield': {'factory': 'field:label:error:text',
                                  'properties': {'description': 'I am the description',
                                                 'label': 'First Field',
                                                 'required': 'I am required'},
                                  'value': 'context.firstfield_value'}},
-                 {'secondfield': {'factory': 'field:label:error:select',
+                 {'secondfield': {'custom': {'custom_stuff': {'builders': 'context.custom_builder',
+                                                              'extractors': ['context.custom_extractor_1',
+                                                                             'context.custom_extractor_2'],
+                                                              'preprocessors': 'context.custom_preprocessor',
+                                                              'renderers': 'context.custom_renderer'}},
+                                  'factory': 'field:label:*custom_stuff:error:select',
                                   'properties': {'label': 'Second Field',
                                                  'multivalued': True,
                                                  'vocabulary': 'yafowil.yaml.tests.test_vocab'},
@@ -83,6 +98,32 @@ Test YamlParser for yafowil forms::
     >>> parser.context
     <DummyContext object at ...>
 
+Parse definition values. If definition is a string.
+
+    >>> parser.parse_definition_value(object())
+    <object object at ...>
+    
+    >>> parser.parse_definition_value('foo')
+    'foo'
+    
+    >>> parser.parse_definition_value('yafowil.yaml.tests.test_vocab')
+    <function test_vocab at ...>
+    
+    >>> parser.parse_definition_value('context.firstfield_value')
+    <function firstfield_value at ...>
+    
+    >>> parser.parse_definition_value('yafowil.inexistent')
+    'yafowil.inexistent'
+    
+    >>> parser.parse_definition_value('context.inexistent')
+    'context.inexistent'
+
     >>> from yafowil.yaml import parse_from_YAML
     >>> form = parse_from_YAML(template_path, context)
-    >>> #form
+    >>> form
+    <Widget object 'demoform' at ...>
+    
+    >>> form.printtree()
+    <class 'yafowil.base.Widget'>: demoform
+      <class 'yafowil.base.Widget'>: firstfield
+      <class 'yafowil.base.Widget'>: secondfield
