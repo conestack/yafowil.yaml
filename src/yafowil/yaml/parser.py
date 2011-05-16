@@ -43,20 +43,18 @@ class YAMLParser(object):
             for k, v in defs.get('props', dict()).items():
                 props[k] = self.parse_definition_value(v)
             custom = dict()
-            for ck, cv in defs.get('custom', dict()).items():
+            for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
                 for key in ['extractors',
                             'renderers',
                             'preprocessors',
                             'builders']:
-                    part = cv.get(key, [])
+                    part = custom_value.get(key, [])
                     if not type(part) in [types.TupleType, types.ListType]:
                         part = [part]
                     part = [self.parse_definition_value(pt) for pt in part]
                     custom_props.append(part)
-                custom[ck] = custom_props
-            if custom:
-                print custom
+                custom[custom_key] = custom_props
             return factory(
                 defs.get('factory', 'form'), # defaults to 'form'
                 name=defs.get('name', None),
@@ -65,12 +63,13 @@ class YAMLParser(object):
                 custom=custom,
             )
         def create_children(node, children_defs):
-            for child_def in children_defs:
-                keys = child_def.keys()
+            for child in children_defs:
+                keys = child.keys()
                 if len(keys) != 1:
                     msg = u"Found %i widget names. Expected one" % len(keys)
                     raise YAMLTransformationError(msg)
                 name = keys[0]
+                child_def = child[name]
                 node[name] = call_factory(child_def)
                 create_children(node[name], child_def.get('widgets', []))
         root = call_factory(data)
@@ -82,7 +81,9 @@ class YAMLParser(object):
             return value
         names = value.split('.')
         ret = value
+        bound = False
         if names[0] == 'context':
+            bound = True
             part = self.context.__class__
         else:
             part = sys.modules[names[0]]
@@ -93,4 +94,6 @@ class YAMLParser(object):
             return ret
         if not type(part) is types.FunctionType:
             return value
+        if bound:
+            return types.MethodType(part, self.context, self.context.__class__)
         return part

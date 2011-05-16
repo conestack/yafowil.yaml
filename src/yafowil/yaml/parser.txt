@@ -9,14 +9,14 @@ Form definition with 2 fields::
     ... - firstfield:
     ...     factory: field:label:error:text
     ...     value: context.firstfield_value
-    ...     properties:
+    ...     props:
     ...         label: First Field
     ...         description: I am the description
     ...         required: I am required
     ... - secondfield:
     ...     factory: field:label:*custom_stuff:error:select
     ...     value: ['a', 'b']
-    ...     properties:
+    ...     props:
     ...         label: Second Field
     ...         multivalued: True
     ...         vocabulary: yafowil.yaml.tests.test_vocab
@@ -26,8 +26,6 @@ Form definition with 2 fields::
     ...                 - context.custom_extractor_1
     ...                 - context.custom_extractor_2
     ...             renderers: context.custom_renderer
-    ...             preprocessors: context.custom_preprocessor
-    ...             builders: context.custom_builder
     ... """
 
 Check how yaml parses this::
@@ -38,19 +36,17 @@ Check how yaml parses this::
      'name': 'demoform',
      'props': {'action': 'demoaction'},
      'widgets': [{'firstfield': {'factory': 'field:label:error:text',
-                                 'properties': {'description': 'I am the description',
-                                                'label': 'First Field',
-                                                'required': 'I am required'},
+                                 'props': {'description': 'I am the description',
+                                           'label': 'First Field',
+                                           'required': 'I am required'},
                                  'value': 'context.firstfield_value'}},
-                 {'secondfield': {'custom': {'custom_stuff': {'builders': 'context.custom_builder',
-                                                              'extractors': ['context.custom_extractor_1',
+                 {'secondfield': {'custom': {'custom_stuff': {'extractors': ['context.custom_extractor_1',
                                                                              'context.custom_extractor_2'],
-                                                              'preprocessors': 'context.custom_preprocessor',
                                                               'renderers': 'context.custom_renderer'}},
                                   'factory': 'field:label:*custom_stuff:error:select',
-                                  'properties': {'label': 'Second Field',
-                                                 'multivalued': True,
-                                                 'vocabulary': 'yafowil.yaml.tests.test_vocab'},
+                                  'props': {'label': 'Second Field',
+                                            'multivalued': True,
+                                            'vocabulary': 'yafowil.yaml.tests.test_vocab'},
                                   'value': ['a', 'b']}}]}
 
 Create tmp env::
@@ -69,8 +65,15 @@ Create tmp env::
 Create dummy context::
 
     >>> class DummyContext(object):
-    ...     def firstfield_value(widget, data):
+    ...     some_attr = ''
+    ...     def firstfield_value(self, widget, data):
     ...         return 'First value'
+    ...     def custom_extractor_1(self, widget, data):
+    ...         return data.extracted
+    ...     def custom_extractor_2(self, widget, data):
+    ...         return data.extracted
+    ...     def custom_renderer(self, widget, data):
+    ...         return data.rendered
     
     >>> context = DummyContext()
 
@@ -110,7 +113,7 @@ Parse definition values. If definition is a string.
     <function test_vocab at ...>
     
     >>> parser.parse_definition_value('context.firstfield_value')
-    <function firstfield_value at ...>
+    <bound method DummyContext.firstfield_value of <DummyContext object at ...>>
     
     >>> parser.parse_definition_value('yafowil.inexistent')
     'yafowil.inexistent'
@@ -127,3 +130,24 @@ Parse definition values. If definition is a string.
     <class 'yafowil.base.Widget'>: demoform
       <class 'yafowil.base.Widget'>: firstfield
       <class 'yafowil.base.Widget'>: secondfield
+    
+    >>> form.attrs.items()
+    [('action', 'demoaction')]
+    
+    >>> pxml(form())
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+      <div class="field" id="field-demoform-firstfield">
+        <label for="input-demoform-firstfield">First Field</label>
+        <input class="required text" id="input-demoform-firstfield" name="demoform.firstfield" required="required" type="text" value="First value"/>
+      </div>
+      <div class="field" id="field-demoform-secondfield">
+        <label for="input-demoform-secondfield">Second Field</label>
+        <input id="exists-demoform-secondfield" name="demoform.secondfield-exists" type="hidden" value="exists"/>
+        <select id="input-demoform-secondfield" multiple="multiple" name="demoform.secondfield">
+          <option id="input-demoform-secondfield-a" selected="selected" value="a">a</option>
+          <option id="input-demoform-secondfield-b" selected="selected" value="b">b</option>
+          <option id="input-demoform-secondfield-c" value="c">c</option>
+        </select>
+      </div>
+    </form>
+    <BLANKLINE>
