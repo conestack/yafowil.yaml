@@ -76,18 +76,28 @@ class YAMLParser(object):
         if not isinstance(value, basestring) or not '.' in value:
             return value
         names = value.split('.')
-        ret = value
         bound = False
         if names[0] == 'context':
             bound = True
-            part = self.context.__class__
+            part = self.context
         else:
-            part = sys.modules[names[0]]
+            try:
+                part = sys.modules[names[0]]
+            except KeyError:
+                return value
         for name in names[1:]:
-            if name in part.__dict__:
-                part = part.__dict__[name]
+            if name in part.__class__.__dict__.keys():
+                part = part.__class__.__dict__[name]
                 continue
-            return ret
+            found = False
+            for cls in part.__class__.__bases__:
+                if name in cls.__dict__.keys():
+                    part = cls.__dict__[name]
+                    found = True
+                    break
+            if found:
+                continue
+            return value
         if not type(part) is types.FunctionType:
             return value
         if bound:
