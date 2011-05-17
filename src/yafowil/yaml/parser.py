@@ -2,7 +2,7 @@ import sys
 import types
 import yaml
 import yafowil.loader
-from yaml.parser import ParserError
+from yaml.error import YAMLError
 from yafowil.base import (
     factory,
     UNSET,
@@ -29,8 +29,10 @@ class YAMLParser(object):
         try:
             with open(self.path, 'r') as file:
                 raw = yaml.load(file.read())
-        except ParserError, e:
-            msg = u"Cannot parse YAML from given path '%s'" % self.path
+        except YAMLError, e:
+            msg = (u"Cannot parse YAML from given path '%s'. "
+                "Original exception was:\n%s: %s") % (
+                self.path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
         except IOError, e:
             msg = u"File not found: '%s'" % self.path

@@ -89,7 +89,8 @@ Test YamlParser for yafowil forms::
     >>> YAMLParser(trash_path, context=context)()
     Traceback (most recent call last):
       ...
-    YAMLTransformationError: Cannot parse YAML from given path '...trash.yaml'
+    YAMLTransformationError: Cannot parse YAML from given path
+    '...trash.yaml'. Original exception was: ...
     
     >>> parser = YAMLParser(template_path, context=context)
     >>> parser
