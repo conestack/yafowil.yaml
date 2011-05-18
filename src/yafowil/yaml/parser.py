@@ -78,9 +78,7 @@ class YAMLParser(object):
         if not isinstance(value, basestring) or not '.' in value:
             return value
         names = value.split('.')
-        bound = False
         if names[0] == 'context':
-            bound = True
             part = self.context
         else:
             try:
