@@ -145,6 +145,9 @@ Parse definition values. If definition is a string::
     >>> parser.parse_definition_value('inexistent.inexistent')
     'inexistent.inexistent'
 
+    >>> parser.parse_definition_value('expr:context.firstfield_value()')
+    <function <lambda> at ...>
+
     >>> from yafowil.yaml import parse_from_YAML
     >>> form = parse_from_YAML(template_path, context)
     >>> form

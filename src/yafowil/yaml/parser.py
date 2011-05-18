@@ -77,6 +77,8 @@ class YAMLParser(object):
     def parse_definition_value(self, value):
         if not isinstance(value, basestring) or not '.' in value:
             return value
+        if value.startswith('expr:'):
+            return lambda w, d: eval(value[5:], {'context': self.context}, {})
         names = value.split('.')
         if names[0] == 'context':
             part = self.context
