@@ -88,28 +88,10 @@ class YAMLParser(object):
             except KeyError:
                 return value
         for name in names[1:]:
-            if isinstance(part, types.ModuleType):
-                if name in part.__dict__.keys():
-                    part = part.__dict__[name]
-                    continue
+            if hasattr(part, name):
+                part = getattr(part, name)
+            else:
                 return value
-            elif isinstance(part, (type, types.ClassType, types.ObjectType)):
-                dct = part.__class__.__dict__
-                if name in dct.keys():
-                    part = dct[name]
-                    continue
-                found = False
-                for cls in part.__class__.__bases__:
-                    dct = cls.__dict__
-                    if name in dct.keys():
-                        part = dct[name]
-                        found = True
-                        break
-                if found:
-                    continue
-            return value
         if not callable(part):
             return value
-        if bound:
-            return types.MethodType(part, self.context, self.context.__class__)
         return part

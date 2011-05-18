@@ -74,6 +74,15 @@ Create dummy context::
     ...         return data.extracted
     ...     def custom_renderer(self, widget, data):
     ...         return data.rendered
+    ...     class NewStyle(object):
+    ...         class Another(object):
+    ...             def test_method_1(self, widget, data):
+    ...                 return 'Test method 1'
+    ...         class OldStyle:
+    ...             def test_method_2(self, widget, data):
+    ...                 return 'Test method 2'
+    ...         old_style = OldStyle()
+    ...     new_style = NewStyle()
     
     >>> context = DummyContext()
 
@@ -115,6 +124,17 @@ Parse definition values. If definition is a string::
     
     >>> parser.parse_definition_value('context.firstfield_value')
     <bound method DummyContext.firstfield_value of <DummyContext object at ...>>
+
+    >>> parser.parse_definition_value('context.new_style.old_style.test_method_2')
+    <bound method OldStyle.test_method_2 of <__builtin__.OldStyle instance at
+    ...>>
+
+    >>> parser.parse_definition_value('context.NewStyle.old_style.test_method_2')
+    <bound method OldStyle.test_method_2 of <__builtin__.OldStyle instance at
+    ...>>
+
+    >>> parser.parse_definition_value('context.NewStyle.OldStyle.test_method_2')
+    <unbound method OldStyle.test_method_2>
     
     >>> parser.parse_definition_value('yafowil.inexistent')
     'yafowil.inexistent'
