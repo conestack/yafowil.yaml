@@ -125,7 +125,7 @@ This results to...::
 ...which renders::
 
     >>> pxml(form())
-    <form action="http://example.com/form_action" enctype="multipart/form-data" id="form-demo_form" method="post">
+    <form action="http://example.com/form_action" enctype="multipart/form-data" id="form-demo_form" method="post" novalidate="novalidate">
       <label for="input-demo_form-title">Title</label>
       <div class="field" id="field-demo_form-title">
         <input class="required text" id="input-demo_form-title" name="demo_form.title" required="required" type="text" value="title"/>

@@ -162,7 +162,7 @@ Parse definition values. If definition is a string::
     [('action', 'demoaction')]
     
     >>> pxml(form())
-    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <div class="field" id="field-demoform-firstfield">
         <label for="input-demoform-firstfield">First Field</label>
         <input class="required text" id="input-demoform-firstfield" name="demoform.firstfield" required="required" type="text" value="First value"/>
@@ -196,7 +196,7 @@ Parse definition values. If definition is a string::
     
     >>> form = YAMLParser(template_path, context=context)()
     >>> pxml(form())
-    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <input class="text" id="input-demoform-firstfield" name="demoform.firstfield" type="text" value="context.some_attr"/>
     </form>
     <BLANKLINE>
@@ -227,7 +227,7 @@ Parse definition values. If definition is a string::
     
     >>> form = YAMLParser(template_path, context=context)()
     >>> pxml(form())
-    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post">
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <table>
         <tr>
           <td>
