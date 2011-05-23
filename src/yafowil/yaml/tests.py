@@ -1,3 +1,4 @@
+import os
 import unittest
 import doctest 
 from pprint import pprint
@@ -10,7 +11,10 @@ optionflags = doctest.NORMALIZE_WHITESPACE | \
 
 TESTFILES = [
     'parser.txt',
+    '../../../README.rst',
 ]
+
+DEMO_FORM_PATH = os.path.join(os.path.split(__file__)[0], 'demo_form.yaml')
 
 
 def test_vocab():
@@ -35,7 +39,8 @@ def test_suite():
             optionflags=optionflags,
             globs={'interact': interact,
                    'pprint': pprint,
-                   'pxml': pxml},
+                   'pxml': pxml,
+                   'demo_form_path': DEMO_FORM_PATH},
         ) for file in TESTFILES
     ])
 

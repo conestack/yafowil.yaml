@@ -1,0 +1,25 @@
+factory: form
+name: demo_form
+props:
+    action: context.form_action
+widgets:
+- title:
+    factory: label:field:error:text
+    value: expr:context.get('title', '')
+    props:
+        label: Title
+        required: No title given
+- description:
+    factory: label:field:textarea
+    value: expr:context.get('description', '')
+    props:
+        label: Description
+        rows: 5
+- save:
+    factory: submit
+    props:
+        action: save
+        expression: True
+        handler: context.save
+        next: context.next
+        label: Save

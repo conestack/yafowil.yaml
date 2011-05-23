@@ -2,8 +2,8 @@
 History
 =======
 
-
-0.9dev
-------
+0.9
+---
 
 - make it work
+  [aatis, rnix]
