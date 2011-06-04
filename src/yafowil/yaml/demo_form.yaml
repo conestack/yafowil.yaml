@@ -7,13 +7,13 @@ widgets:
     factory: label:field:error:text
     value: expr:context.get('title', '')
     props:
-        label: Title
+        label: i18n:Title
         required: No title given
 - description:
     factory: label:field:textarea
     value: expr:context.get('description', '')
     props:
-        label: Description
+        label: i18n:Description
         rows: 5
 - save:
     factory: submit
@@ -22,4 +22,4 @@ widgets:
         expression: True
         handler: context.save
         next: context.next
-        label: Save
+        label: i18n:Save
