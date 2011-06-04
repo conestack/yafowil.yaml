@@ -9,8 +9,8 @@ from yafowil.base import (
 )
 
 
-def parse_from_YAML(path, context=None):
-    return YAMLParser(path, context)()
+def parse_from_YAML(path, context=None, message_factory=None):
+    return YAMLParser(path, context, message_factory)()
 
 
 class YAMLTransformationError(Exception):
@@ -20,9 +20,10 @@ class YAMLTransformationError(Exception):
 
 class YAMLParser(object):
     
-    def __init__(self, path, context=None):
+    def __init__(self, path, context=None, message_factory=None):
         self.path = path
         self.context = context
+        self.message_factory = message_factory
     
     def __call__(self):
         raw = None
@@ -75,10 +76,14 @@ class YAMLParser(object):
         return root
     
     def parse_definition_value(self, value):
-        if not isinstance(value, basestring) or not '.' in value:
+        if not isinstance(value, basestring):
             return value
         if value.startswith('expr:'):
             return lambda w, d: eval(value[5:], {'context': self.context}, {})
+        if value.startswith('i18n:'):
+            return self.message_factory(value[5:])
+        if not '.' in value:
+            return value
         names = value.split('.')
         if names[0] == 'context':
             part = self.context
