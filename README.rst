@@ -1,7 +1,4 @@
 
-Describe YAFOWIL forms in YAML.
-
-
 Usage
 =====
 
@@ -20,13 +17,13 @@ Create YAML file containing form description
         factory: label:field:error:text
         value: expr:context.get('title', '')
         props:
-            label: Title
+            label: i18n:Title
             required: No title given
     - description:
         factory: label:field:textarea
         value: expr:context.get('description', '')
         props:
-            label: Description
+            label: i18n:Description
             rows: 5
     - save:
         factory: submit
@@ -35,7 +32,7 @@ Create YAML file containing form description
             expression: True
             handler: context.save
             next: context.next
-            label: Save
+            label: i18n:Save
 
 
 Each widget node is represented by an associative array. Keys are mapping to
@@ -65,8 +62,11 @@ corresponding arguments of ``yafowil.base.factory`` signature:
 Resolution of definition values
 -------------------------------
 
-Beside static values, definitions may contain python expressions, access to a
-rendering context and pointers to callables.
+Beside static values, definitions may contain python expressions, i18n message 
+strings, access to a rendering context and pointers to callables.
+
+- If definition value starts with ``i18n:``, a message string gets created
+  by calling given message factory.
 
 - If definition value starts with ``expr:``, a callback wrapper is created
   which gets executed each time the widget tree gets rendered. For security
@@ -105,6 +105,18 @@ example above, this looks like::
     ...         return 'http://example.com/form_action_succeed'
 
 
+Create Message Factory
+----------------------
+
+Usually someone uses message factories from ``pyramid.i18n`` or 
+``zope.i18nmessageid``. See refering documentation for details.
+
+    >>> message_factory = lambda x: x
+
+
+Obtaining YAML Forms
+--------------------
+
 To obtain a yafowil widget tree from YAML, use
 ``yafowil.yaml.parse_from_YAML``::
 
@@ -112,7 +124,9 @@ To obtain a yafowil widget tree from YAML, use
     >>> from yafowil.yaml import parse_from_YAML
     
     >>> rendering_context = FormRenderingContext()
-    >>> form = parse_from_YAML(demo_form_path, context=rendering_context)
+    >>> form = parse_from_YAML(demo_form_path,
+    ...                        context=rendering_context,
+    ...                        message_factory=message_factory)
 
 This results to...::
     

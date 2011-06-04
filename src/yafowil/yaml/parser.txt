@@ -10,14 +10,14 @@ Sample form definition::
     ...     factory: field:label:error:text
     ...     value: context.firstfield_value
     ...     props:
-    ...         label: First Field
+    ...         label: i18n:First Field
     ...         description: I am the description
     ...         required: I am required
     ... - secondfield:
     ...     factory: field:label:*custom_stuff:error:select
     ...     value: ['a', 'b']
     ...     props:
-    ...         label: Second Field
+    ...         label: i18n:Second Field
     ...         multivalued: True
     ...         vocabulary: yafowil.yaml.tests.test_vocab
     ...     custom:
@@ -37,14 +37,14 @@ Check how yaml parses this::
      'props': {'action': 'demoaction'},
      'widgets': [{'firstfield': {'factory': 'field:label:error:text',
                                  'props': {'description': 'I am the description',
-                                           'label': 'First Field',
+                                           'label': 'i18n:First Field',
                                            'required': 'I am required'},
                                  'value': 'context.firstfield_value'}},
                  {'secondfield': {'custom': {'custom_stuff': {'extractors': ['context.custom_extractor_1',
                                                                              'context.custom_extractor_2'],
                                                               'renderers': 'context.custom_renderer'}},
                                   'factory': 'field:label:*custom_stuff:error:select',
-                                  'props': {'label': 'Second Field',
+                                  'props': {'label': 'i18n:Second Field',
                                             'multivalued': True,
                                             'vocabulary': 'yafowil.yaml.tests.test_vocab'},
                                   'value': ['a', 'b']}}]}
@@ -86,22 +86,26 @@ Create dummy context::
     
     >>> context = DummyContext()
 
+Dummy message factory::
+
+    >>> _ = lambda x: x
+
 Test YamlParser for yafowil forms::
 
     >>> from yafowil.yaml import YAMLParser
 
-    >>> YAMLParser('inexistent_path', context=context)()
+    >>> YAMLParser('inexistent_path', context=context, message_factory=_)()
     Traceback (most recent call last):
       ...
     YAMLTransformationError: File not found: 'inexistent_path'
     
-    >>> YAMLParser(trash_path, context=context)()
+    >>> YAMLParser(trash_path, context=context, message_factory=_)()
     Traceback (most recent call last):
       ...
     YAMLTransformationError: Cannot parse YAML from given path
     '...trash.yaml'. Original exception was: ...
     
-    >>> parser = YAMLParser(template_path, context=context)
+    >>> parser = YAMLParser(template_path, context=context, message_factory=_)
     >>> parser
     <yafowil.yaml.parser.YAMLParser object at ...>
     
@@ -149,7 +153,7 @@ Parse definition values. If definition is a string::
     <function <lambda> at ...>
 
     >>> from yafowil.yaml import parse_from_YAML
-    >>> form = parse_from_YAML(template_path, context)
+    >>> form = parse_from_YAML(template_path, context, _)
     >>> form
     <Widget object 'demoform' at ...>
     
