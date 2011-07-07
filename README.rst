@@ -129,7 +129,7 @@ To obtain a yafowil widget tree from YAML, use
     >>> from yafowil.yaml import parse_from_YAML
     
     >>> rendering_context = FormRenderingContext()
-    >>> form = parse_from_YAML(demo_form_path,
+    >>> form = parse_from_YAML('yafowil.yaml:demo_form.yaml',
     ...                        context=rendering_context,
     ...                        message_factory=message_factory)
 

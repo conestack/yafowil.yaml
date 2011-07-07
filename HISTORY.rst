@@ -6,6 +6,11 @@ History
 ------
 
 - adopt to yafowil 1.1
+  [rnix, 2011-07-07]
+
+- extend ``parse_from_YAML`` resolving package path instead of excepting
+  absolute or relative file path
+  [rnix, 2011-07-07]
 
 0.9.1
 -----

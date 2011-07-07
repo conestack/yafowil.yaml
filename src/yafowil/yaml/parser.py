@@ -1,5 +1,6 @@
 import sys
 import types
+import pkg_resources
 import yaml
 import yafowil.loader
 from yaml.error import YAMLError
@@ -10,6 +11,9 @@ from yafowil.base import (
 
 
 def parse_from_YAML(path, context=None, message_factory=None):
+    if path.find(':') > -1:
+        package, subpath = path.split(':')
+        path = pkg_resources.resource_filename(package, subpath)
     return YAMLParser(path, context, message_factory)()
 
 
