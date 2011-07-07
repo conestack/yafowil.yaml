@@ -53,6 +53,9 @@ corresponding arguments of ``yafowil.base.factory`` signature:
 ``custom``
     Custom widget properties as associative array.
 
+``mode``
+    Rendering mode.
+
 ``widgets``
     Child widgets as list. Each child widget is an associative array with one
     key - the widget name - containing again an associative array with the keys

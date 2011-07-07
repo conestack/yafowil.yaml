@@ -49,9 +49,10 @@ class YAMLParser(object):
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
                 for key in ['extractors',
-                            'renderers',
+                            'edit_renderers',
                             'preprocessors',
-                            'builders']:
+                            'builders'
+                            'display_renderers']:
                     part = custom_value.get(key, [])
                     if not type(part) in [types.TupleType, types.ListType]:
                         part = [part]
@@ -64,6 +65,7 @@ class YAMLParser(object):
                 value=self.parse_definition_value(defs.get('value', UNSET)),
                 props=props,
                 custom=custom,
+                mode=self.parse_definition_value(defs.get('mode', 'edit')),
             )
         def create_children(node, children_defs):
             for child in children_defs:
@@ -79,7 +81,10 @@ class YAMLParser(object):
         if not isinstance(value, basestring):
             return value
         if value.startswith('expr:'):
-            return lambda w, d: eval(value[5:], {'context': self.context}, {})
+            return lambda widget=None, data=None: \
+                eval(value[5:],
+                     {'context': self.context, 'widget': widget, 'data': data},
+                     {})
         if value.startswith('i18n:'):
             return self.message_factory(value[5:])
         if not '.' in value:

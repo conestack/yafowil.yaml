@@ -25,7 +25,7 @@ Sample form definition::
     ...             extractors:
     ...                 - context.custom_extractor_1
     ...                 - context.custom_extractor_2
-    ...             renderers: context.custom_renderer
+    ...             edit_renderers: context.custom_renderer
     ... """
 
 Check how yaml parses this::
@@ -42,7 +42,7 @@ Check how yaml parses this::
                                  'value': 'context.firstfield_value'}},
                  {'secondfield': {'custom': {'custom_stuff': {'extractors': ['context.custom_extractor_1',
                                                                              'context.custom_extractor_2'],
-                                                              'renderers': 'context.custom_renderer'}},
+                                                              'edit_renderers': 'context.custom_renderer'}},
                                   'factory': 'field:label:*custom_stuff:error:select',
                                   'props': {'label': 'i18n:Second Field',
                                             'multivalued': True,
