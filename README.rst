@@ -54,7 +54,8 @@ corresponding arguments of ``yafowil.base.factory`` signature:
     Custom widget properties as associative array.
 
 ``mode``
-    Rendering mode.
+    Widget rendering mode or callable/expression returning widget rendering
+    mode.
 
 ``widgets``
     Child widgets as list. Each child widget is an associative array with one
@@ -73,7 +74,8 @@ strings, access to a rendering context and pointers to callables.
 
 - If definition value starts with ``expr:``, a callback wrapper is created
   which gets executed each time the widget tree gets rendered. For security
-  reasons, only rendering context is accessible in expressions.
+  reasons, only rendering ``context``, ``widget`` and ``data`` are available
+  in expressions.
 
 - If definition value starts with ``context``, rendering context is used to
   lookup callbacks. If lookup fails, return definition value as string.

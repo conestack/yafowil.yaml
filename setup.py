@@ -37,7 +37,7 @@ setup(name='yafowil.yaml',
       zip_safe=True,
       install_requires=[
           'setuptools',
-          'yafowil>=1.1',
+          'yafowil>0.9.4',
           'PyYAML',
       ],
       tests_require=tests_require,
