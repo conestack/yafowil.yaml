@@ -10,7 +10,7 @@ longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 tests_require = [
     'interlude',
     'lxml',
-    'yafowil',
+    'yafowil>1.0.4',
     'PyYAML',
 ]
 
@@ -37,7 +37,7 @@ setup(name='yafowil.yaml',
       zip_safe=True,
       install_requires=[
           'setuptools',
-          'yafowil>0.9.4',
+          'yafowil>1.0.4',
           'PyYAML',
       ],
       tests_require=tests_require,
