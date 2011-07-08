@@ -10,7 +10,7 @@ optionflags = doctest.NORMALIZE_WHITESPACE | \
 
 TESTFILES = [
     'parser.txt',
-    '../../../SPHINX.txt',
+    'sphinx.txt',
 ]
 
 
