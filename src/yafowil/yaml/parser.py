@@ -75,6 +75,7 @@ class YAMLParser(object):
             for child in children_defs:
                 name = child.keys()[0]
                 child_def = child[name]
+                child_def['name'] = name
                 node[name] = call_factory(child_def)
                 create_children(node[name], child_def.get('widgets', []))
         root = call_factory(data)

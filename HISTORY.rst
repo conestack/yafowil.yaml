@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.1dev
+--------
+
+- fix automatic name setting for recursive compounds
+  [rnix, 2011-09-30]
+
 1.0
 ---
 
