@@ -260,3 +260,6 @@ Parse definition values. If definition is a string::
 #    ...         - somefield:
 #    ...             factory: td:field:text
 #    ... """
+
+    >>> import shutil
+    >>> shutil.rmtree(tempdir)
