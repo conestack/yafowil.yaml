@@ -174,7 +174,7 @@ Parse definition values. If definition is a string::
       <div class="field" id="field-demoform-secondfield">
         <label for="input-demoform-secondfield">Second Field</label>
         <input id="exists-demoform-secondfield" name="demoform.secondfield-exists" type="hidden" value="exists"/>
-        <select id="input-demoform-secondfield" multiple="multiple" name="demoform.secondfield">
+        <select class="select" id="input-demoform-secondfield" multiple="multiple" name="demoform.secondfield">
           <option id="input-demoform-secondfield-a" selected="selected" value="a">a</option>
           <option id="input-demoform-secondfield-b" selected="selected" value="b">b</option>
           <option id="input-demoform-secondfield-c" value="c">c</option>
