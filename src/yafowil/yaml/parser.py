@@ -21,6 +21,16 @@ class YAMLTransformationError(Exception):
     """Raised if yafowil widget tree could not be build by YAML definitions.
     """
 
+class TBSupplement(object):
+
+    def __init__(self, obj, msg):
+        self.manageable_object = obj
+        self.msg = msg
+
+    def getInfo(self, html=1):
+        if html:
+            return '<pre>%s</pre>' % self.msg
+        return self.msg
 
 class YAMLParser(object):
     
@@ -86,10 +96,12 @@ class YAMLParser(object):
         if not isinstance(value, basestring):
             return value
         if value.startswith('expr:'):
-            return lambda widget=None, data=None: \
-                eval(value[5:],
-                     {'context': self.context, 'widget': widget, 'data': data},
-                     {})
+            def fetch_value(widget=None, data=None):
+                __traceback_supplement__ = (TBSupplement, self, str(value))
+                return eval(value[5:],
+                            {'context': self.context, 'widget': widget,
+                             'data': data}, {})
+            return fetch_value
         if value.startswith('i18n:'):
             return self.message_factory(value[5:])
         if not '.' in value:
