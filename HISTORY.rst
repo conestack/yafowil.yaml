@@ -2,8 +2,8 @@
 History
 =======
 
-1.0.1dev
---------
+1.0.1
+-----
 
 - Adopt test for ``select`` blueprint change.
   [rnix, 2011-12-18]
