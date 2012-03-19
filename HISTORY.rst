@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.2
+-----
+
+- accidentially set zip_safe=True which is not. Set to Fasle now.
+  [jensens, 2012-03-19]
+
 1.0.1
 -----
 

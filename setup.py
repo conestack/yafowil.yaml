@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0.1'
+version = '1.0.2'
 shortdesc = \
 'YAFOWIL - YAML parser for widget trees.'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
@@ -34,7 +34,7 @@ setup(name='yafowil.yaml',
       package_dir = {'': 'src'},
       namespace_packages=['yafowil'],
       include_package_data=True,
-      zip_safe=True,
+      zip_safe=False,
       install_requires=[
           'setuptools',
           'yafowil>1.0.4',
