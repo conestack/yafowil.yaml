@@ -17,7 +17,7 @@ Sample form definition::
     ...     factory: field:label:*custom_stuff:error:select
     ...     value: ['a', 'b']
     ...     props:
-    ...         label: i18n:Second Field
+    ...         label.title: i18n:Second Field
     ...         multivalued: True
     ...         vocabulary: yafowil.yaml.tests.test_vocab
     ...     custom:
@@ -44,7 +44,7 @@ Check how yaml parses this::
                                                               'extractors': ['context.custom_extractor_1',
                                                                              'context.custom_extractor_2']}},
                                   'factory': 'field:label:*custom_stuff:error:select',
-                                  'props': {'label': 'i18n:Second Field',
+                                  'props': {'label.title': 'i18n:Second Field',
                                             'multivalued': True,
                                             'vocabulary': 'yafowil.yaml.tests.test_vocab'},
                                   'value': ['a', 'b']}}]}
