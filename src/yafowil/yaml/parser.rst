@@ -172,7 +172,7 @@ Parse definition values. If definition is a string::
         <input class="required text" id="input-demoform-firstfield" name="demoform.firstfield" required="required" type="text" value="First value"/>
       </div>
       <div class="field" id="field-demoform-secondfield">
-        <label for="input-demoform-secondfield">Second Field</label>
+        <label for="input-demoform-secondfield" title="Second Field">secondfield</label>
         <input id="exists-demoform-secondfield" name="demoform.secondfield-exists" type="hidden" value="exists"/>
         <select class="select" id="input-demoform-secondfield" multiple="multiple" name="demoform.secondfield">
           <option id="input-demoform-secondfield-a" selected="selected" value="a">a</option>
