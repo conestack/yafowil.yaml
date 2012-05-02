@@ -33,7 +33,7 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration::
 
 
 Each widget node is represented by an associative array. Keys are mapping to
-corresponding arguments of ``yafowil.base.factory`` signature: 
+corresponding arguments of ``yafowil.base.factory`` signature:
 
 ``factory``
     Chained factory registration names.
@@ -45,7 +45,9 @@ corresponding arguments of ``yafowil.base.factory`` signature:
     Widget value or callable/expression returning widget value.
 
 ``props``
-    Widget properties as associative array.
+    Widget properties as associative array. You can prefix individual
+    properties with the name of the blueprint to address a specific blueprint.
+    For Example use: label.title to set the title attribute of the label.
 
 ``custom``
     Custom widget properties as associative array.
@@ -63,7 +65,7 @@ corresponding arguments of ``yafowil.base.factory`` signature:
 Resolution of definition values
 -------------------------------
 
-Beside static values, definitions may contain python expressions, i18n message 
+Beside static values, definitions may contain python expressions, i18n message
 strings, access to a rendering context and pointers to callables.
 
 - If definition value starts with ``i18n:``, a message string gets created
@@ -88,20 +90,20 @@ A rendering context is provided by a class. Refering to the form description
 example above, this looks like::
 
     >>> class FormRenderingContext(object):
-    ... 
+    ...
     ...     def get(self, key, default=None):
     ...         # do data lookup here
     ...         value = key
     ...         return value
-    ...     
+    ...
     ...     def form_action(self, widget, data):
     ...         # create and return form action URL
     ...         return 'http://example.com/form_action'
-    ...     
+    ...
     ...     def save(self, widget, data):
     ...         # extract and save form data
     ...         pass
-    ...     
+    ...
     ...     def next(self, request):
     ...         # compute and return next URL
     ...         return 'http://example.com/form_action_succeed'
@@ -110,7 +112,7 @@ example above, this looks like::
 Create Message Factory
 ----------------------
 
-Usually someone uses message factories from ``pyramid.i18n`` or 
+Usually someone uses message factories from ``pyramid.i18n`` or
 ``zope.i18nmessageid``. See refering documentation for details.
 
     >>> message_factory = lambda x: x
@@ -124,14 +126,14 @@ To obtain a yafowil widget tree from YAML, use
 
     >>> import yafowil.loader
     >>> from yafowil.yaml import parse_from_YAML
-    
+
     >>> rendering_context = FormRenderingContext()
     >>> form = parse_from_YAML('yafowil.yaml:demo_form.yaml',
     ...                        context=rendering_context,
     ...                        message_factory=message_factory)
 
 This results to...::
-    
+
     >>> form.printtree()
     <class 'yafowil.base.Widget'>: demo_form
       <class 'yafowil.base.Widget'>: title
