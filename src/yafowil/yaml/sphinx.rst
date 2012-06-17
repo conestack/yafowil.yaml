@@ -15,7 +15,8 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration::
         value: expr:context.get('title', '')
         props:
             label: i18n:Title
-            required: No title given
+            required: True
+            required_message: No title given
     - description:
         factory: label:field:textarea
         value: expr:context.get('description', '')
