@@ -166,7 +166,7 @@ Parse definition values. If definition is a string::
     [('action', 'demoaction')]
     
     >>> pxml(form())
-    <form action="demoaction" class="well" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
+    <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <div class="field" id="field-demoform-firstfield">
         <label for="input-demoform-firstfield">First Field</label>
         <input class="required text" id="input-demoform-firstfield" name="demoform.firstfield" required="required" type="text" value="First value"/>
