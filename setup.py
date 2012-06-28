@@ -7,12 +7,7 @@ shortdesc = \
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
-tests_require = [
-    'interlude',
-    'lxml',
-    'yafowil>1.0.4',
-    'PyYAML',
-]
+tests_require = ['yafowil[test]']
 
 setup(name='yafowil.yaml',
       version=version,
