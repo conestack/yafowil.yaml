@@ -2,6 +2,7 @@ bin/
 eggs/
 parts/
 dist/
+devsrc/
 .installed.cfg
 .mr.developer.cfg
 develop-eggs/
