@@ -15,7 +15,7 @@ We'd be happy to see many forks and pull-requests ;).
 Contributors
 ============
 
-- Robert Niederreiter <rnix@squarewave.at>
+- Robert Niederreiter <rnix [at] squarewave [dot] at>
 
 - Attila Olah
 
