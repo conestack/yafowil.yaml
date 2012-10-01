@@ -66,6 +66,9 @@ Create dummy context::
 
     >>> class DummyContext(object):
     ...     some_attr = ''
+    ...     @property
+    ...     def fail_callback(self):
+    ...         raise ValueError('I am supposed to fail')
     ...     def firstfield_value(self, widget, data):
     ...         return 'First value'
     ...     def custom_extractor_1(self, widget, data):
@@ -244,22 +247,44 @@ Parse definition values. If definition is a string::
     </form>
     <BLANKLINE>
 
-# XXX: discuss - should structural flag default to True for table elements?
-#    >>> raw = """
-#    ... factory: form
-#    ... name: demoform
-#    ... props:
-#    ...     action: demoaction
-#    ... widgets:
-#    ... - sometable:
-#    ...     factory: table
-#    ...     widgets:
-#    ...     - row_1:
-#    ...         factory: tr
-#    ...         widgets:
-#    ...         - somefield:
-#    ...             factory: td:field:text
-#    ... """
+Traceback supplement::
+
+    >>> raw = """
+    ... factory: form
+    ... name: demoform
+    ... props:
+    ...     action: demoaction
+    ... widgets:
+    ... - somefield:
+    ...     factory: td:field:text
+    ...     value: expr:context.fail_callback
+    ... """
+    
+    >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
+    >>> with open(template_path, 'w') as file:
+    ...     file.write(raw)
+    
+    >>> form = YAMLParser(template_path, context=context)()
+    >>> pxml(form())
+    Traceback (most recent call last):
+      ...
+        data.rendered = renderer(self, data)
+        yafowil widget processing info:
+        - path      : demoform
+        - blueprints: ['form']
+        - task      : render
+        - descr     : failed at 'form' in mode 'edit'
+      File ...
+        data.value = self.getter(self, data)
+        yafowil widget processing info:
+        - path      : demoform.somefield
+        - blueprints: ['td', 'field', 'text']
+        - task      : run preprocessors
+        - descr     : execute
+      ...
+    ValueError: I am supposed to fail
+
+Cleanup::
 
     >>> import shutil
     >>> shutil.rmtree(tempdir)
