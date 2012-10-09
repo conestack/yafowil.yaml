@@ -2,7 +2,7 @@ Documentation
 =============
 
 Detailed documentation for describing YAFOWIL forms with YAML can be found
-`here <http://packages.python.org/yafowil/yaml.html>`_ 
+`here <http://docs.yafowil.info/yafowil/yaml.html>`_ 
 
 Source Code
 ===========

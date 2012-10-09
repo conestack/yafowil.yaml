@@ -1,4 +1,5 @@
-It is possible to describe YAFOWIL forms using YAML as description language.
+It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_
+as description language.
 
 Create YAML file containing form description
 --------------------------------------------
@@ -63,32 +64,36 @@ corresponding arguments of ``yafowil.base.factory`` signature:
     descibed here.
 
 
-Resolution of definition values
--------------------------------
+Computed values
+---------------
 
 Beside static values, definitions may contain python expressions, i18n message
 strings, access to a rendering context and pointers to callables.
 
-- If definition value starts with ``i18n:``, a message string gets created
-  by calling given message factory.
+``i18n:``
+    If definition value starts with ``i18n:``, a message string gets created
+    by calling given message factory.
 
-- If definition value starts with ``expr:``, a callback wrapper is created
-  which gets executed each time the widget tree gets rendered. For security
-  reasons, only rendering ``context``, ``widget`` and ``data`` are available
-  in expressions.
+``expr:``
+    If definition value starts with ``expr:``, a callback wrapper is created
+    which gets executed each time the widget tree gets rendered. For security
+    reasons, only rendering ``context``, ``widget`` and ``data`` are available
+    in expressions.
 
-- If definition value starts with ``context``, rendering context is used to
-  lookup callbacks. If lookup fails, return definition value as string.
+``context``
+    If definition value starts with ``context``, rendering context is used to
+    lookup callbacks. If lookup fails, return definition value as string.
 
-- If '.' is found in definition value, try to lookup callback from module path.
-  If lookup fails, return definition value as string.
+``.`` in value
+    If ``.`` is found in value string, try to lookup callback from module path.
+    When lookup fails, return definition value as string.
 
 
 Define rendering context
 ------------------------
 
-A rendering context is provided by a class. Refering to the form description
-example above, this looks like::
+A rendering context has to be provided. Refering to the form description
+example above, this may look like::
 
     >>> class FormRenderingContext(object):
     ...
@@ -113,16 +118,17 @@ example above, this looks like::
 Create Message Factory
 ----------------------
 
-Usually someone uses message factories from ``pyramid.i18n`` or
-``zope.i18nmessageid``. See refering documentation for details.
+Unless no others are registered one want to use message factories from
+``pyramid.i18n`` or ``zope.i18nmessageid``. See refering documentation for
+details. Here we create a dummy message factory::
 
     >>> message_factory = lambda x: x
 
 
-Obtaining YAML Forms
---------------------
+Creating YAFOWIL-Forms form YAML-Files
+--------------------------------------
 
-To obtain a yafowil widget tree from YAML, use
+To create a yafowil widget tree from YAML, use
 ``yafowil.yaml.parse_from_YAML``::
 
     >>> import yafowil.loader
@@ -133,7 +139,7 @@ To obtain a yafowil widget tree from YAML, use
     ...                        context=rendering_context,
     ...                        message_factory=message_factory)
 
-This results to...::
+This results into...::
 
     >>> form.printtree()
     <class 'yafowil.base.Widget'>: demo_form
