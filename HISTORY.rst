@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.3
+-----
+
+- test coverage, documentation
+  [rnix, jensens]
+
 1.0.2
 -----
 

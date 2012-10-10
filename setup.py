@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0.3pre1'
+version = '1.0.3'
 shortdesc = \
 'YAFOWIL - YAML parser for widget trees.'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
@@ -23,8 +23,8 @@ setup(name='yafowil.yaml',
       keywords='html input widgets form compound',
       author='BlueDynamics Alliance',
       author_email='dev@bluedynamics.com',
-      url=u'',
-      license='Simplified BSD',
+      url=u'http://pypi.python.org/pypi/yafowil.yaml',
+      license='BSD',
       packages=find_packages('src'),
       package_dir = {'': 'src'},
       namespace_packages=['yafowil'],
