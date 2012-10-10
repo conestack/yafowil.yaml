@@ -19,4 +19,4 @@ Contributors
 
 - Attila Olah
 
-- Jens W. Klein <jk@kleinundpartner.at>
+- Jens W. Klein <jk [at] kleinundpartner [dot] at>
