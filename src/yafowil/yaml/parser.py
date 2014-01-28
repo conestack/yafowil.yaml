@@ -32,12 +32,12 @@ class TBSupplement(object):
 
 
 class YAMLParser(object):
-    
+
     def __init__(self, path, context=None, message_factory=None):
         self.path = path
         self.context = context
         self.message_factory = message_factory
-    
+
     def __call__(self):
         raw = None
         try:
@@ -52,7 +52,7 @@ class YAMLParser(object):
             msg = u"File not found: '%s'" % self.path
             raise YAMLTransformationError(msg)
         return self.create_tree(raw)
-    
+
     def create_tree(self, data):
         def call_factory(defs):
             props = dict()
@@ -90,7 +90,7 @@ class YAMLParser(object):
         root = call_factory(data)
         create_children(root, data.get('widgets', []))
         return root
-    
+
     def parse_definition_value(self, value):
         if not isinstance(value, basestring):
             return value
