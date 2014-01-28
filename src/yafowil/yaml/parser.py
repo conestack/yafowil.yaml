@@ -2,11 +2,13 @@ import sys
 import types
 import pkg_resources
 import yaml
+import yafowil.loader  # loads registry
 from yaml.error import YAMLError
 from yafowil.base import (
     factory,
     UNSET,
 )
+yafowil.loader  # pep 8
 
 
 def parse_from_YAML(path, context=None, message_factory=None):
