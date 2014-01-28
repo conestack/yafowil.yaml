@@ -2,7 +2,6 @@ import sys
 import types
 import pkg_resources
 import yaml
-import yafowil.loader
 from yaml.error import YAMLError
 from yafowil.base import (
     factory,
