@@ -2,6 +2,13 @@
 History
 =======
 
+1.0.4
+-----
+
+- allow default for i18n messages in format:
+  ``i18n:message_id:Default Value``
+  [rnix, jensens, 2014-02-14]
+
 1.0.3
 -----
 

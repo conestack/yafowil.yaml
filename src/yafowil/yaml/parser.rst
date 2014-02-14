@@ -17,7 +17,7 @@ Sample form definition::
     ...     factory: field:label:*custom_stuff:error:select
     ...     value: ['a', 'b']
     ...     props:
-    ...         label.title: i18n:Second Field
+    ...         label.title: i18n:second_field:Second Field
     ...         multivalued: True
     ...         vocabulary: yafowil.yaml.tests.test_vocab
     ...     custom:
@@ -44,7 +44,7 @@ Check how yaml parses this::
                                                               'extractors': ['context.custom_extractor_1',
                                                                              'context.custom_extractor_2']}},
                                   'factory': 'field:label:*custom_stuff:error:select',
-                                  'props': {'label.title': 'i18n:Second Field',
+                                  'props': {'label.title': 'i18n:second_field:Second Field',
                                             'multivalued': True,
                                             'vocabulary': 'yafowil.yaml.tests.test_vocab'},
                                   'value': ['a', 'b']}}]}
@@ -57,7 +57,7 @@ Create tmp env::
     >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
     >>> with open(template_path, 'w') as file:
     ...     file.write(raw)
-    
+
     >>> trash_path = os.path.join(tempdir, 'trash.yaml')
     >>> with open(trash_path, 'w') as file:
     ...     file.write("{]")
@@ -86,12 +86,12 @@ Create dummy context::
     ...                 return 'Test method 2'
     ...         old_style = OldStyle()
     ...     new_style = NewStyle()
-    
+
     >>> context = DummyContext()
 
 Dummy message factory::
 
-    >>> _ = lambda x: x
+    >>> _ = lambda x, default=None: default and default or x
 
 Test YamlParser for yafowil forms::
 
@@ -101,20 +101,20 @@ Test YamlParser for yafowil forms::
     Traceback (most recent call last):
       ...
     YAMLTransformationError: File not found: 'inexistent_path'
-    
+
     >>> YAMLParser(trash_path, context=context, message_factory=_)()
     Traceback (most recent call last):
       ...
     YAMLTransformationError: Cannot parse YAML from given path
     '...trash.yaml'. Original exception was: ...
-    
+
     >>> parser = YAMLParser(template_path, context=context, message_factory=_)
     >>> parser
     <yafowil.yaml.parser.YAMLParser object at ...>
-    
+
     >>> parser.path
     '...tmpl.yaml'
-    
+
     >>> parser.context
     <DummyContext object at ...>
 
@@ -122,13 +122,13 @@ Parse definition values. If definition is a string::
 
     >>> parser.parse_definition_value(object())
     <object object at ...>
-    
+
     >>> parser.parse_definition_value('foo')
     'foo'
-    
+
     >>> parser.parse_definition_value('yafowil.yaml.tests.test_vocab')
     <function test_vocab at ...>
-    
+
     >>> parser.parse_definition_value('context.firstfield_value')
     <bound method DummyContext.firstfield_value of <DummyContext object at ...>>
 
@@ -142,10 +142,10 @@ Parse definition values. If definition is a string::
 
     >>> parser.parse_definition_value('context.NewStyle.OldStyle.test_method_2')
     <unbound method OldStyle.test_method_2>
-    
+
     >>> parser.parse_definition_value('yafowil.inexistent')
     'yafowil.inexistent'
-    
+
     >>> parser.parse_definition_value('context.inexistent')
     'context.inexistent'
 
@@ -159,15 +159,15 @@ Parse definition values. If definition is a string::
     >>> form = parse_from_YAML(template_path, context, _)
     >>> form
     <Widget object 'demoform' at ...>
-    
+
     >>> form.printtree()
     <class 'yafowil.base.Widget'>: demoform
       <class 'yafowil.base.Widget'>: firstfield
       <class 'yafowil.base.Widget'>: secondfield
-    
+
     >>> form.attrs.items()
     [('action', 'demoaction')]
-    
+
     >>> pxml(form())
     <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <div class="field" id="field-demoform-firstfield">
@@ -196,18 +196,18 @@ Parse definition values. If definition is a string::
     ...     factory: text
     ...     value: context.some_attr
     ... """
-    
+
     >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
     >>> with open(template_path, 'w') as file:
     ...     file.write(raw)
-    
+
     >>> form = YAMLParser(template_path, context=context)()
     >>> pxml(form())
     <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
       <input class="text" id="input-demoform-firstfield" name="demoform.firstfield" type="text" value="context.some_attr"/>
     </form>
     <BLANKLINE>
-    
+
     >>> raw = """
     ... factory: form
     ... name: demoform
@@ -227,11 +227,11 @@ Parse definition values. If definition is a string::
     ...         - somefield:
     ...             factory: td:field:text
     ... """
-    
+
     >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
     >>> with open(template_path, 'w') as file:
     ...     file.write(raw)
-    
+
     >>> form = YAMLParser(template_path, context=context)()
     >>> pxml(form())
     <form action="demoaction" enctype="multipart/form-data" id="form-demoform" method="post" novalidate="novalidate">
@@ -259,11 +259,11 @@ Traceback supplement::
     ...     factory: td:field:text
     ...     value: expr:context.fail_callback
     ... """
-    
+
     >>> template_path = os.path.join(tempdir, 'tmpl.yaml')
     >>> with open(template_path, 'w') as file:
     ...     file.write(raw)
-    
+
     >>> form = YAMLParser(template_path, context=context)()
     >>> pxml(form())
     Traceback (most recent call last):

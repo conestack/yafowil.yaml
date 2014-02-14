@@ -74,7 +74,7 @@ class YAMLParser(object):
                     custom_props.append(part)
                 custom[custom_key] = custom_props
             return factory(
-                defs.get('factory', 'form'), # defaults to 'form'
+                defs.get('factory', 'form'),  # defaults to 'form'
                 name=defs.get('name', None),
                 value=self.parse_definition_value(defs.get('value', UNSET)),
                 props=props,
@@ -103,7 +103,12 @@ class YAMLParser(object):
                              'data': data}, {})
             return fetch_value
         if value.startswith('i18n:'):
-            return self.message_factory(value[5:])
+            parts = value.split(":")
+            if len(parts) > 3:
+                raise YAMLTransformationError('to many : in %s' % value)
+            if len(parts) == 2:
+                return self.message_factory(parts[1])
+            return self.message_factory(parts[1], default=parts[2])
         if not '.' in value:
             return value
         names = value.split('.')
