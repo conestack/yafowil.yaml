@@ -1,12 +1,15 @@
-bin/
-eggs/
-parts/
-dist/
-devsrc/
+/bin/
+/eggs/
+/parts/
+/dist/
+/devsrc/
+/lib/
+/include/
+/local/
 .installed.cfg
 .mr.developer.cfg
-develop-eggs/
-src/yafowil.yaml.egg-info/
+/develop-eggs/
+/src/yafowil.yaml.egg-info/
 *.pyc
 *.pyo
 
