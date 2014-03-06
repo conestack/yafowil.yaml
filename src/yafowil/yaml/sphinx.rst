@@ -150,14 +150,14 @@ This results into...::
 ...which renders::
 
     >>> pxml(form())
-     <form action="http://example.com/form_action" enctype="multipart/form-data" id="form-demo_form" method="post" novalidate="novalidate">
+    <form action="http://example.com/form_action" enctype="multipart/form-data" id="form-demo_form" method="post" novalidate="novalidate">
       <label for="input-demo_form-title">Title</label>
       <div class="field" id="field-demo_form-title">
         <input class="required text" id="input-demo_form-title" name="demo_form.title" required="required" type="text" value="title"/>
       </div>
       <label for="input-demo_form-description">Description</label>
       <div class="field" id="field-demo_form-description">
-        <textarea cols="80" id="input-demo_form-description" name="demo_form.description" rows="5">description</textarea>
+        <textarea class="textarea" cols="80" id="input-demo_form-description" name="demo_form.description" rows="5">description</textarea>
       </div>
       <input id="input-demo_form-save" name="action.demo_form.save" type="submit" value="Save"/>
     </form>
