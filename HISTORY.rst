@@ -2,6 +2,12 @@
 History
 =======
 
+1.0.5dev
+--------
+
+- Fix test coverage.
+  [rnix, jensens, 2014-04-30]
+
 1.0.4
 -----
 

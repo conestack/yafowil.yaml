@@ -5,7 +5,7 @@ from setuptools import (
 )
 
 
-version = '1.0.4'
+version = '1.0.5dev'
 shortdesc = \
 'YAFOWIL - YAML parser for widget trees.'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()

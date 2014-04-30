@@ -155,6 +155,17 @@ Parse definition values. If definition is a string::
     >>> parser.parse_definition_value('expr:context.firstfield_value()')
     <function fetch_value at ...>
 
+    >>> parser.parse_definition_value('i18n:foo')
+    'foo'
+
+    >>> parser.parse_definition_value('i18n:foo:Foo')
+    'Foo'
+
+    >>> parser.parse_definition_value('i18n:foo:Foo:Fooo')
+    Traceback (most recent call last):
+      ...
+    YAMLTransformationError: to many : in i18n:foo:Foo:Fooo
+
     >>> from yafowil.yaml import parse_from_YAML
     >>> form = parse_from_YAML(template_path, context, _)
     >>> form
