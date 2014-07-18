@@ -258,6 +258,85 @@ Parse definition values. If definition is a string::
     </form>
     <BLANKLINE>
 
+Test yaml nesting. Create main form::
+
+    >>> main_raw = """
+    ... factory: form
+    ... name: mainform
+    ... props:
+    ...     action: mainformaction
+    ... widgets:
+    ... - sub:
+    ...     nest: sub.yaml
+    ... """
+
+    >>> main_path = os.path.join(tempdir, 'main.yaml')
+    >>> with open(main_path, 'w') as file:
+    ...     file.write(main_raw)
+
+Create nested form, case single field::
+
+    >>> nested_raw = """
+    ... factory: text
+    ... value: context.some_attr
+    ... props:
+    ...     class_add: nested_input
+    ... """
+
+    >>> nested_path = os.path.join(tempdir, 'sub.yaml')
+    >>> with open(nested_path, 'w') as file:
+    ...     file.write(nested_raw)
+
+    >>> form = YAMLParser(main_path, context=context)()
+    >>> pxml(form())
+    <form action="mainformaction" enctype="multipart/form-data" id="form-mainform" method="post" novalidate="novalidate">
+      <input class="nested_input text" id="input-mainform-sub" name="mainform.sub" type="text" value="context.some_attr"/>
+    </form>
+    <BLANKLINE>
+
+Create nested form, case structural compound::
+
+    >>> nested_raw = """
+    ... factory: compound
+    ... props:
+    ...     structural: True
+    ... widgets:
+    ... - subfieldname:
+    ...     factory: text
+    ...     value: subfieldvalue
+    ... """
+
+    >>> nested_path = os.path.join(tempdir, 'sub.yaml')
+    >>> with open(nested_path, 'w') as file:
+    ...     file.write(nested_raw)
+
+    >>> form = YAMLParser(main_path, context=context)()
+    >>> pxml(form())
+    <form action="mainformaction" enctype="multipart/form-data" id="form-mainform" method="post" novalidate="novalidate">
+      <input class="text" id="input-mainform-subfieldname" name="mainform.subfieldname" type="text" value="subfieldvalue"/>
+    </form>
+    <BLANKLINE>
+
+Create nested form, case non structural compound::
+
+    >>> nested_raw = """
+    ... factory: compound
+    ... widgets:
+    ... - fieldname:
+    ...     factory: text
+    ... """
+
+    >>> nested_path = os.path.join(tempdir, 'sub.yaml')
+    >>> with open(nested_path, 'w') as file:
+    ...     file.write(nested_raw)
+
+    >>> form = YAMLParser(main_path, context=context)()
+    >>> pxml(form())
+    <form action="mainformaction" enctype="multipart/form-data" id="form-mainform" method="post" novalidate="novalidate">
+      <input class="text" id="input-mainform-sub-fieldname" name="mainform.sub.fieldname" type="text" value=""/>
+    </form>
+    <BLANKLINE>
+
 Traceback supplement::
 
     >>> raw = """

@@ -1,3 +1,4 @@
+import os
 import sys
 import types
 import pkg_resources
@@ -10,11 +11,15 @@ from yafowil.base import (
 )
 
 
-def parse_from_YAML(path, context=None, message_factory=None):
+def translate_path(path):
     if path.find(':') > -1:
         package, subpath = path.split(':')
         path = pkg_resources.resource_filename(package, subpath)
-    return YAMLParser(path, context, message_factory)()
+    return path
+
+
+def parse_from_YAML(path, context=None, message_factory=None):
+    return YAMLParser(translate_path(path), context, message_factory)()
 
 
 class YAMLTransformationError(Exception):
@@ -29,7 +34,7 @@ class TBSupplement(object):
         self.msg = msg
 
     def getInfo(self, html=1):
-        return html and '<pre>%s</pre>' % self.msg or self.msg
+        return html and '<pre>{0}</pre>'.format(self.msg or self.msg)
 
 
 class YAMLParser(object):
@@ -40,19 +45,22 @@ class YAMLParser(object):
         self.message_factory = message_factory
 
     def __call__(self):
-        raw = None
+        return self.create_tree(self.load_yaml(self.path))
+
+    def load_yaml(self, path):
+        data = None
         try:
-            with open(self.path, 'r') as file:
-                raw = yaml.load(file.read())
+            with open(path, 'r') as file:
+                data = yaml.load(file.read())
         except YAMLError, e:
-            msg = (u"Cannot parse YAML from given path '%s'. "
-                "Original exception was:\n%s: %s") % (
-                self.path, e.__class__.__name__, e)
+            msg = u"Cannot parse YAML from given path '{0}'. " +\
+                  u"Original exception was:\n{1}: {2}"
+            msg = msg.format(path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
         except IOError, e:
-            msg = u"File not found: '%s'" % self.path
+            msg = u"File not found: '{0}'".format(path)
             raise YAMLTransformationError(msg)
-        return self.create_tree(raw)
+        return data
 
     def create_tree(self, data):
         def call_factory(defs):
@@ -86,8 +94,20 @@ class YAMLParser(object):
                 name = child.keys()[0]
                 child_def = child[name]
                 child_def['name'] = name
-                node[name] = call_factory(child_def)
-                create_children(node[name], child_def.get('widgets', []))
+                # sub form nesting
+                nest = child_def.get('nest')
+                if nest:
+                    nest_path = translate_path(nest)
+                    # case same directory as main form yaml
+                    if len([it for it in os.path.split(nest_path) if it]) == 1:
+                        base_path = self.path.split(os.path.sep)[:-1]
+                        nest_path = [os.path.sep] + base_path + [nest_path]
+                        nest_path = os.path.join(*nest_path)
+                    node[name] = self.create_tree(self.load_yaml(nest_path))
+                # regular child parsing
+                else:
+                    node[name] = call_factory(child_def)
+                    create_children(node[name], child_def.get('widgets', []))
         root = call_factory(data)
         create_children(root, data.get('widgets', []))
         return root
@@ -105,7 +125,7 @@ class YAMLParser(object):
         if value.startswith('i18n:'):
             parts = value.split(":")
             if len(parts) > 3:
-                raise YAMLTransformationError('to many : in %s' % value)
+                raise YAMLTransformationError('to many : in {0}'.format(value))
             if len(parts) == 2:
                 return self.message_factory(parts[1])
             return self.message_factory(parts[1], default=parts[2])

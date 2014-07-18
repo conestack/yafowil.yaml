@@ -2,6 +2,13 @@
 History
 =======
 
+1.1.dev0
+--------
+
+- Widget definitions in yaml may point to other yaml files for form nesting
+  using ``nest`` property.
+  [rnix, 2014-07-18]
+
 1.0.5
 -----
 
