@@ -99,28 +99,26 @@ Define rendering context
 ------------------------
 
 A rendering context has to be provided. Refering to the form description
-example above, this may look like:
+example above, this may look like::
 
-.. code-block:: python
-
-    class FormRenderingContext(object):
-
-        def get(self, key, default=None):
-            # do data lookup here
-            value = key
-            return value
-
-        def form_action(self, widget, data):
-            # create and return form action URL
-            return 'http://example.com/form_action'
-
-        def save(self, widget, data):
-            # extract and save form data
-            pass
-
-        def next(self, request):
-            # compute and return next URL
-            return 'http://example.com/form_action_succeed'
+    >>> class FormRenderingContext(object):
+    ...
+    ...     def get(self, key, default=None):
+    ...         # do data lookup here
+    ...         value = key
+    ...         return value
+    ...
+    ...     def form_action(self, widget, data):
+    ...         # create and return form action URL
+    ...         return 'http://example.com/form_action'
+    ...
+    ...     def save(self, widget, data):
+    ...         # extract and save form data
+    ...         pass
+    ...
+    ...     def next(self, request):
+    ...         # compute and return next URL
+    ...         return 'http://example.com/form_action_succeed'
 
 
 Create Message Factory
@@ -128,28 +126,24 @@ Create Message Factory
 
 Unless no others are registered one want to use message factories from
 ``pyramid.i18n`` or ``zope.i18nmessageid``. See refering documentation for
-details. Here we create a dummy message factory:
+details. Here we create a dummy message factory::
 
-.. code-block:: python
-
-    message_factory = lambda x: x
+    >>> message_factory = lambda x: x
 
 
 Creating YAFOWIL-Forms form YAML-Files
 --------------------------------------
 
 To create a yafowil widget tree from YAML, use
-``yafowil.yaml.parse_from_YAML``:
+``yafowil.yaml.parse_from_YAML``::
 
-.. code-block:: python
+    >>> import yafowil.loader
+    >>> from yafowil.yaml import parse_from_YAML
 
-    import yafowil.loader
-    from yafowil.yaml import parse_from_YAML
-
-    rendering_context = FormRenderingContext()
-    form = parse_from_YAML('yafowil.yaml:demo_form.yaml',
-                           context=rendering_context,
-                           message_factory=message_factory)
+    >>> rendering_context = FormRenderingContext()
+    >>> form = parse_from_YAML('yafowil.yaml:demo_form.yaml',
+    ...                        context=rendering_context,
+    ...                        message_factory=message_factory)
 
 This results into...::
 
