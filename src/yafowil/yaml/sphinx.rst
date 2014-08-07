@@ -4,7 +4,9 @@ as description language.
 Create YAML file containing form description
 --------------------------------------------
 
-Create a file, i.e. ``demo_form.yaml`` and add widget configuration::
+Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
+
+.. code-block:: yaml
 
     factory: form
     name: demo_form
@@ -57,6 +59,9 @@ corresponding arguments of ``yafowil.base.factory`` signature:
 ``mode``
     Widget rendering mode or callable/expression returning widget rendering
     mode.
+
+``nest``
+    Include other yaml file representing this widget.
 
 ``widgets``
     Child widgets as list. Each child widget is an associative array with one
