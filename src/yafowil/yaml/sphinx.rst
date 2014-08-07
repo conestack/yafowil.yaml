@@ -18,14 +18,13 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
         factory: label:field:error:text
         value: expr:context.get('title', '')
         props:
-            label: i18n:Title
-            required: True
-            required_message: No title given
+            label: i18n:title:Title
+            required: i18n:title_required:No title given
     - description:
         factory: label:field:textarea
         value: expr:context.get('description', '')
         props:
-            label: i18n:Description
+            label: i18n:description:Description
             rows: 5
     - save:
         factory: submit
@@ -34,7 +33,7 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
             expression: True
             handler: context.save
             next: context.next
-            label: i18n:Save
+            label: i18n:save:Save
 
 
 Each widget node is represented by an associative array. Keys are mapping to
@@ -168,3 +167,16 @@ This results into...::
       <input id="input-demo_form-save" name="action.demo_form.save" type="submit" value="Save"/>
     </form>
     <BLANKLINE>
+
+
+Manage translations of YAML forms
+---------------------------------
+
+As shown above, YAML forms may contain i18n translation strings. The message
+strings and the corresponding default values can be extracted automatically
+and written to po files using `lingua <http://pypi.python.org/pypi/lingua>`_
+if `yafowil.lingua <http://pypi.python.org/pypi/yafowil.lingua>`_ plugin is
+installed.
+
+For details on managing translations with ``lingua`` please refer to
+corresponding documantation.
