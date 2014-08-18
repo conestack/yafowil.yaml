@@ -2,8 +2,8 @@
 History
 =======
 
-1.1.dev0
---------
+1.1
+---
 
 - Widget definitions in yaml may point to other yaml files for form nesting
   using ``nest`` property.
