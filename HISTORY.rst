@@ -6,7 +6,7 @@ History
 ----------------
 
 - Feature: Support definitions written in JSON too. Since YAML and JSON are
-  100% comaptible exact the strcuture applies.
+  100% comaptible exact the same structure applies.
   [jensens, 2014-11-13]
 
 1.1
