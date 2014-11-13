@@ -1,9 +1,10 @@
-It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_
-as description language.
+It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_ as description language.
+
+`JSON <http://www.json.org/JSON>`_ syntax is a `subset <https://en.wikipedia.org/wiki/YAML#JSON>`_ of YAML version 1.2, so we support JSON too.
 
 
-Create YAML file containing form description
---------------------------------------------
+Create file containing form description
+---------------------------------------
 
 Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
 
@@ -15,7 +16,7 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
         action: context.form_action
     widgets:
     - title:
-        factory: label:field:error:text
+        factory: "label:field:error:text"
         value: expr:context.get('title', '')
         props:
             label: i18n:title:Title
@@ -35,9 +36,54 @@ Create a file, i.e. ``demo_form.yaml`` and add widget configuration.
             next: context.next
             label: i18n:save:Save
 
+In JSON notation the same would look like this.
 
-Each widget node is represented by an associative array. Keys are mapping to
-corresponding arguments of ``yafowil.base.factory`` signature:
+.. code-block:: json
+
+    {
+      "factory": "form",
+      "name": "demo_form",
+      "props": {
+        "action": "context.form_action"
+      },
+      "widgets": [
+        {
+          "title": {
+            "factory": "label:field:error:text",
+            "value": "expr:context.get('title', '')",
+            "props": {
+              "label": "i18n:title:Title",
+              "required": "i18n:title_required:No title given"
+            }
+          }
+        },
+        {
+          "description": {
+            "factory": "label:field:textarea",
+            "value": "expr:context.get('description', '')",
+            "props": {
+              "label": "i18n:description:Description",
+              "rows": 5
+            }
+          }
+        },
+        {
+          "save": {
+            "factory": "submit",
+            "props": {
+              "action": "save",
+              "expression": true,
+              "handler": "context.save",
+              "label": "i18n:save:Save",
+              "next": "context.next"
+            }
+          }
+        }
+      ]
+    }
+
+Each widget node is represented by an associative array.
+Keys are mapping to corresponding arguments of ``yafowil.base.factory`` signature:
 
 ``factory``
     Chained factory registration names.
@@ -49,8 +95,8 @@ corresponding arguments of ``yafowil.base.factory`` signature:
     Widget value or callable/expression returning widget value.
 
 ``props``
-    Widget properties as associative array. You can prefix individual
-    properties with the name of the blueprint to address a specific blueprint.
+    Widget properties as associative array.
+    You can prefix individual properties with the name of the blueprint to address a specific blueprint.
     For Example use: label.title to set the title attribute of the label.
 
 ``custom``
@@ -133,8 +179,9 @@ details. Here we create a dummy message factory::
 Creating YAFOWIL-Forms form YAML-Files
 --------------------------------------
 
-To create a yafowil widget tree from YAML, use
-``yafowil.yaml.parse_from_YAML``::
+To create a yafowil widget tree from YAML, use ``yafowil.yaml.parse_from_YAML``.
+This accepts also JSON file files ending with ``.json``.
+To adress a specific pyhton package path prefix the filename with ``my.module:``::
 
     >>> import yafowil.loader
     >>> from yafowil.yaml import parse_from_YAML
@@ -179,4 +226,4 @@ if `yafowil.lingua <http://pypi.python.org/pypi/yafowil.lingua>`_ plugin is
 installed.
 
 For details on managing translations with ``lingua`` please refer to
-corresponding documantation.
+corresponding documentation.

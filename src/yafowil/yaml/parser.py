@@ -1,14 +1,15 @@
+# -*- coding: utf-8 -*-
+from yafowil.base import UNSET
+from yafowil.base import factory
+from yaml.error import YAMLError
+
+import json
 import os
+import pkg_resources
 import sys
 import types
-import pkg_resources
-import yaml
 import yafowil.loader  # nopep8  # loads registry
-from yaml.error import YAMLError
-from yafowil.base import (
-    factory,
-    UNSET,
-)
+import yaml
 
 
 def translate_path(path):
@@ -22,8 +23,18 @@ def parse_from_YAML(path, context=None, message_factory=None):
     return YAMLParser(translate_path(path), context, message_factory)()
 
 
-class YAMLTransformationError(Exception):
+class CommonTransformationError(Exception):
     """Raised if yafowil widget tree could not be build by YAML definitions.
+    """
+
+
+class YAMLTransformationError(CommonTransformationError):
+    """Raised if yafowil widget tree could not be build by YAML definitions.
+    """
+
+
+class JSONTransformationError(CommonTransformationError):
+    """Raised if yafowil widget tree could not be build by JSON definitions.
     """
 
 
@@ -45,7 +56,28 @@ class YAMLParser(object):
         self.message_factory = message_factory
 
     def __call__(self):
-        return self.create_tree(self.load_yaml(self.path))
+        if self.path.endswith('json'):
+            # we support json too
+            data = self.load_json(self.path)
+        else:
+            # fallback to yaml as default
+            data = self.load_yaml(self.path)
+        return self.create_tree(data)
+
+    def load_json(self, path):
+        data = None
+        try:
+            with open(path, 'r') as file:
+                data = json.load(file)
+        except (SyntaxError, ValueError), e:
+            msg = u"Cannot parse JSON from given path '{0}'. " +\
+                  u"Original exception was:\n{1}: {2}"
+            msg = msg.format(path, e.__class__.__name__, e)
+            raise JSONTransformationError(msg)
+        except IOError, e:
+            msg = u"File not found: '{0}'".format(path)
+            raise JSONTransformationError(msg)
+        return data
 
     def load_yaml(self, path):
         data = None
@@ -89,6 +121,7 @@ class YAMLParser(object):
                 custom=custom,
                 mode=self.parse_definition_value(defs.get('mode', 'edit')),
             )
+
         def create_children(node, children_defs):
             for child in children_defs:
                 name = child.keys()[0]

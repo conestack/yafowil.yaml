@@ -5,7 +5,9 @@ History
 1.2 (unreleased)
 ----------------
 
-- no changes yet.
+- Feature: Support definitions written in JSON too. Since YAML and JSON are
+  100% comaptible exact the strcuture applies.
+  [jensens, 2014-11-13]
 
 1.1
 ---

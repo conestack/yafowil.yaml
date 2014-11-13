@@ -28,6 +28,7 @@ Sample form definition::
     ...             edit_renderers: context.custom_renderer
     ... """
 
+
 Check how yaml parses this::
 
     >>> import yaml
@@ -373,6 +374,79 @@ Traceback supplement::
         - descr     : execute
       ...
     ValueError: I am supposed to fail
+
+Check if json works too::
+
+    >>> raw_json = """
+    ... {
+    ...   "factory": "form",
+    ...   "name": "demoform",
+    ...   "props": {
+    ...     "action": "demoaction"
+    ...   },
+    ...   "widgets": [
+    ...     {
+    ...       "firstfield": {
+    ...         "factory": "field:label:error:text",
+    ...         "props": {
+    ...           "description": "I am the description",
+    ...           "label": "i18n:First Field",
+    ...           "required": "I am required"
+    ...         },
+    ...         "value": "context.firstfield_value"
+    ...       }
+    ...     },
+    ...     {
+    ...       "secondfield": {
+    ...         "custom": {
+    ...           "custom_stuff": {
+    ...             "edit_renderers": "context.custom_renderer",
+    ...             "extractors": [
+    ...               "context.custom_extractor_1",
+    ...               "context.custom_extractor_2"
+    ...             ]
+    ...           }
+    ...         },
+    ...         "factory": "field:label:*custom_stuff:error:select",
+    ...         "props": {
+    ...           "label.title": "i18n:second_field:Second Field",
+    ...           "multivalued": true,
+    ...           "vocabulary": "yafowil.yaml.tests.test_vocab"
+    ...         },
+    ...         "value": [
+    ...           "a",
+    ...           "b"
+    ...         ]
+    ...       }
+    ...     }
+    ...   ]
+    ... }
+    ... """
+
+    >>> json_file = os.path.join(tempdir, 'test.json')
+    >>> with open(json_file, 'w') as file:
+    ...     file.write(raw_json)
+    >>> form = YAMLParser(json_file, context=context, message_factory=_)()
+    >>> form.printtree()
+    <class 'yafowil.base.Widget'>: demoform
+      <class 'yafowil.base.Widget'>: firstfield
+      <class 'yafowil.base.Widget'>: secondfield
+
+    >>> trash_file = os.path.join(tempdir, 'trash.json')
+    >>> with open(trash_file, 'w') as file:
+    ...     file.write("{]")
+    >>> YAMLParser(trash_file, context=context, message_factory=_)()
+    Traceback (most recent call last):
+    ...
+    JSONTransformationError: Cannot parse JSON from given path '.../trash.json'. Original exception was:
+    ValueError: Expecting property name: line 1 column 2 (char 1)
+
+    >>> nonexisting_file = os.path.join(tempdir, 'nonexisting.json')
+    >>> YAMLParser(nonexisting_file, context=context, message_factory=_)()
+    Traceback (most recent call last):
+    ...
+    JSONTransformationError: File not found: '.../nonexisting.json'
+
 
 Cleanup::
 
