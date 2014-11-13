@@ -1,6 +1,9 @@
-It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_ as description language.
+It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_
+as description language.
 
-`JSON <http://www.json.org/JSON>`_ syntax is a `subset <https://en.wikipedia.org/wiki/YAML#JSON>`_ of YAML version 1.2, so we support JSON too.
+`JSON <http://www.json.org/JSON>`_ syntax is a
+`subset <https://en.wikipedia.org/wiki/YAML#JSON>`_ of YAML version 1.2, so we
+support JSON too.
 
 
 Create file containing form description
@@ -83,7 +86,8 @@ In JSON notation the same would look like this.
     }
 
 Each widget node is represented by an associative array.
-Keys are mapping to corresponding arguments of ``yafowil.base.factory`` signature:
+Keys are mapping to corresponding arguments of ``yafowil.base.factory``
+signature:
 
 ``factory``
     Chained factory registration names.
@@ -96,7 +100,8 @@ Keys are mapping to corresponding arguments of ``yafowil.base.factory`` signatur
 
 ``props``
     Widget properties as associative array.
-    You can prefix individual properties with the name of the blueprint to address a specific blueprint.
+    You can prefix individual properties with the name of the blueprint to
+    address a specific blueprint.
     For Example use: label.title to set the title attribute of the label.
 
 ``custom``
@@ -181,7 +186,8 @@ Creating YAFOWIL-Forms form YAML-Files
 
 To create a yafowil widget tree from YAML, use ``yafowil.yaml.parse_from_YAML``.
 This accepts also JSON file files ending with ``.json``.
-To adress a specific pyhton package path prefix the filename with ``my.module:``::
+To adress a specific pyhton package path prefix the filename with
+``my.module:``::
 
     >>> import yafowil.loader
     >>> from yafowil.yaml import parse_from_YAML
