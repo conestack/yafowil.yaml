@@ -3,7 +3,7 @@ import os
 from setuptools import setup
 from setuptools import find_packages
 
-version = '1.2.dev0'
+version = '1.2'
 shortdesc = 'YAFOWIL - YAML-/ JSON-parser for widget trees.'
 longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
