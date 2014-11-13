@@ -107,7 +107,7 @@ Keys are mapping to corresponding arguments of ``yafowil.base.factory`` signatur
     mode.
 
 ``nest``
-    Include other yaml file representing this widget.
+    Include other yaml/json file representing this widget.
 
 ``widgets``
     Child widgets as list. Each child widget is an associative array with one

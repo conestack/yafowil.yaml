@@ -56,13 +56,13 @@ class YAMLParser(object):
         self.message_factory = message_factory
 
     def __call__(self):
-        if self.path.endswith('json'):
+        return self.create_tree(self.load(self.path))
+
+    def load(self, path):
+        if path.endswith('json'):
             # we support json too
-            data = self.load_json(self.path)
-        else:
-            # fallback to yaml as default
-            data = self.load_yaml(self.path)
-        return self.create_tree(data)
+            return self.load_json(path)
+        return self.load_yaml(path)
 
     def load_json(self, path):
         data = None
@@ -136,7 +136,7 @@ class YAMLParser(object):
                         base_path = self.path.split(os.path.sep)[:-1]
                         nest_path = [os.path.sep] + base_path + [nest_path]
                         nest_path = os.path.join(*nest_path)
-                    node[name] = self.create_tree(self.load_yaml(nest_path))
+                    node[name] = self.create_tree(self.load(nest_path))
                 # regular child parsing
                 else:
                     node[name] = call_factory(child_def)
