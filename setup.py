@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
-from setuptools import setup
 from setuptools import find_packages
+from setuptools import setup
+import os
+
 
 version = '1.3.dev0'
 shortdesc = 'YAFOWIL - YAML-/ JSON-parser for widget trees.'
@@ -9,6 +10,7 @@ longdesc = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'HISTORY.rst')).read()
 longdesc += open(os.path.join(os.path.dirname(__file__), 'LICENSE.rst')).read()
 tests_require = ['yafowil[test]']
+
 
 setup(
     name='yafowil.yaml',

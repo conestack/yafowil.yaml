@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from yafowil.base import UNSET
+from node.utils import UNSET
 from yafowil.base import factory
 from yaml.error import YAMLError
-
 import json
 import os
 import pkg_resources

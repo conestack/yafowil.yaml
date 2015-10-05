@@ -5,6 +5,7 @@ import doctest
 import lxml.etree as etree
 import unittest
 
+
 optionflags = (
     doctest.NORMALIZE_WHITESPACE |
     doctest.ELLIPSIS |
@@ -43,4 +44,4 @@ def test_suite():
     ])
 
 if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')                # pragma NO COVERAGE
+    unittest.main(defaultTest='test_suite')                # pragma NO COVER
