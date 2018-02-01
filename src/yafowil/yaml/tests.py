@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from interlude import interact
-from node.tests import NodeTestCase
 from pprint import pprint
+from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.tests import pxml
 from yafowil.yaml import YAMLParser
@@ -55,7 +55,7 @@ def test_vocab():
     return ['a', 'b', 'c']
 
 
-class TestYAML(NodeTestCase):
+class TestYAML(YafowilTestCase):
 
     def setUp(self):
         super(TestYAML, self).setUp()
