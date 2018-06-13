@@ -428,7 +428,7 @@ class TestYAML(YafowilTestCase):
         form = YAMLParser(template_path, context=context)()
         try:
             form()
-        except ValueError, e:
+        except ValueError as e:
             self.check_output("""
             Traceback (most recent call last):
               ...

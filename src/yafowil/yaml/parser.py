@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 from node.utils import UNSET
 from yafowil.base import factory
+from yafowil.compat import STR_TYPE
+from yafowil.compat import ITER_TYPES
 from yaml.error import YAMLError
 import json
 import os
 import pkg_resources
 import sys
-import types
 import yafowil.loader  # nopep8  # loads registry
 import yaml
 
@@ -68,12 +69,12 @@ class YAMLParser(object):
         try:
             with open(path, 'r') as file:
                 data = json.load(file)
-        except (SyntaxError, ValueError), e:
+        except (SyntaxError, ValueError) as e:
             msg = u"Cannot parse JSON from given path '{0}'. " +\
                   u"Original exception was:\n{1}: {2}"
             msg = msg.format(path, e.__class__.__name__, e)
             raise JSONTransformationError(msg)
-        except IOError, e:
+        except IOError as e:
             msg = u"File not found: '{0}'".format(path)
             raise JSONTransformationError(msg)
         return data
@@ -83,12 +84,12 @@ class YAMLParser(object):
         try:
             with open(path, 'r') as file:
                 data = yaml.load(file.read())
-        except YAMLError, e:
+        except YAMLError as e:
             msg = u"Cannot parse YAML from given path '{0}'. " +\
                   u"Original exception was:\n{1}: {2}"
             msg = msg.format(path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
-        except IOError, e:
+        except IOError as e:
             msg = u"File not found: '{0}'".format(path)
             raise YAMLTransformationError(msg)
         return data
@@ -107,7 +108,7 @@ class YAMLParser(object):
                             'builders'
                             'display_renderers']:
                     part = custom_value.get(key, [])
-                    if not type(part) in [types.TupleType, types.ListType]:
+                    if not type(part) in ITER_TYPES:
                         part = [part]
                     part = [self.parse_definition_value(pt) for pt in part]
                     custom_props.append(part)
@@ -123,7 +124,9 @@ class YAMLParser(object):
 
         def create_children(node, children_defs):
             for child in children_defs:
-                name = child.keys()[0]
+                for key in child:
+                    name = key
+                    break
                 child_def = child[name]
                 child_def['name'] = name
                 # sub form nesting
@@ -145,7 +148,7 @@ class YAMLParser(object):
         return root
 
     def parse_definition_value(self, value):
-        if not isinstance(value, basestring):
+        if not isinstance(value, STR_TYPE):
             return value
         if value.startswith('expr:'):
             def fetch_value(widget=None, data=None):
