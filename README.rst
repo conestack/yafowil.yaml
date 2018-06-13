@@ -17,8 +17,8 @@ We'd be happy to see many forks and pull-requests ;).
 Contributors
 ============
 
-- Robert Niederreiter <rnix [at] squarewave [dot] at>
+- Robert Niederreiter
 
 - Attila Olah
 
-- Jens W. Klein <jk [at] kleinundpartner [dot] at>
+- Jens W. Klein
