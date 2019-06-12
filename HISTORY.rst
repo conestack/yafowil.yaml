@@ -5,7 +5,9 @@ History
 1.4 (unreleased)
 ----------------
 
-- No changes yet.
+- Parse values of attributes (data-Attributes) if type() is dict.
+  HTML5 Data-Attributes with i18n or callables are possible now
+  [2silver, 2019-06-12]
 
 
 1.3 (2018-07-16)

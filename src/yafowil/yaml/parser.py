@@ -98,7 +98,15 @@ class YAMLParser(object):
         def call_factory(defs):
             props = dict()
             for k, v in defs.get('props', dict()).items():
-                props[k] = self.parse_definition_value(v)
+                if isinstance(v, dict):
+                    dict_attrs = list()
+                    for vk, vv in v.items():
+                        val = self.parse_definition_value(vv)
+                        part = [vk, val]
+                        dict_attrs.append(part)
+                    props[k] = dict_attrs
+                else:
+                    props[k] = self.parse_definition_value(v)
             custom = dict()
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
