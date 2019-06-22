@@ -97,16 +97,7 @@ class YAMLParser(object):
     def create_tree(self, data):
         def call_factory(defs):
             props = dict()
-            for k, v in defs.get('props', dict()).items():
-                if isinstance(v, dict):
-                    dict_attrs = list()
-                    for vk, vv in v.items():
-                        val = self.parse_definition_value(vv)
-                        part = [vk, val]
-                        dict_attrs.append(part)
-                    props[k] = dict_attrs
-                else:
-                    props[k] = self.parse_definition_value(v)
+            props = self.parse_attribute(defs.get('props', dict()))
             custom = dict()
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
@@ -155,6 +146,16 @@ class YAMLParser(object):
         create_children(root, data.get('widgets', []))
         return root
 
+    def parse_attribute(self, value):
+        if not isinstance(value, dict):
+            return self.parse_definition_value(value)
+        for k,v in value.items():
+            if isinstance(v, dict):
+                self.parse_attribute(v)
+            else:
+                value[k] = self.parse_definition_value(v)
+        return value
+
     def parse_definition_value(self, value):
         if not isinstance(value, STR_TYPE):
             return value
@@ -164,7 +165,7 @@ class YAMLParser(object):
                 return eval(value[5:],
                             {'context': self.context, 'widget': widget,
                              'data': data}, {})
-            return fetch_value
+            return fetch_value()
         if value.startswith('i18n:'):
             parts = value.split(":")
             if len(parts) > 3:
