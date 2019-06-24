@@ -165,7 +165,7 @@ class YAMLParser(object):
                 return eval(value[5:],
                             {'context': self.context, 'widget': widget,
                              'data': data}, {})
-            return fetch_value()
+            return fetch_value
         if value.startswith('i18n:'):
             parts = value.split(":")
             if len(parts) > 3:

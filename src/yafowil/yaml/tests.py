@@ -79,6 +79,11 @@ class TestYAML(YafowilTestCase):
                 label: i18n:First Field
                 description: I am the description
                 required: I am required
+                data:
+                    flat: I am a flat data-attribute
+                    i18n: i18n:nested_firstfield:i18n Nested First Field
+                    nested:
+                        nested-i18n: i18n:nested_firstfield:i18n Nested First Field
         - secondfield:
             factory: field:label:*custom_stuff:error:select
             value: ['a', 'b']
@@ -108,7 +113,14 @@ class TestYAML(YafowilTestCase):
                     'props': {
                         'description': 'I am the description',
                         'label': 'i18n:First Field',
-                        'required': 'I am required'
+                        'required': 'I am required',
+                        "data": {
+                            "flat": "I am a flat data-attribute",
+                            "i18n": "i18n:nested_firstfield:i18n Nested First Field",
+                            "nested": {
+                                "nested-i18n": "i18n:nested_firstfield:i18n Nested First Field"
+                            }
+                        }
                     }
                 }
             }, {
@@ -234,9 +246,15 @@ class TestYAML(YafowilTestCase):
               id="form-demoform" method="post" novalidate="novalidate">
           <div class="field" id="field-demoform-firstfield">
             <label for="input-demoform-firstfield">First Field</label>
-            <input class="required text" id="input-demoform-firstfield"
-                   name="demoform.firstfield" required="required"
-                   type="text" value="First value"/>
+            <input class="required text"
+                data-flat="I am a flat data-attribute"
+                data-i18n="i18n Nested First Field"
+                data-nested="{&quot;nested-i18n&quot;: &quot;i18n Nested First Field&quot;}"
+                id="input-demoform-firstfield"
+                name="demoform.firstfield"
+                required="required"
+                type="text"
+                value="First value"/>
           </div>
           <div class="field" id="field-demoform-secondfield">
             <label for="input-demoform-secondfield"
