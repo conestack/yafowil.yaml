@@ -8,7 +8,7 @@ import json
 import os
 import pkg_resources
 import sys
-import yafowil.loader  # nopep8  # loads registry
+import yafowil.loader  # noqa  # loads registry
 import yaml
 
 
@@ -74,7 +74,7 @@ class YAMLParser(object):
                   u"Original exception was:\n{1}: {2}"
             msg = msg.format(path, e.__class__.__name__, e)
             raise JSONTransformationError(msg)
-        except IOError as e:
+        except IOError:
             msg = u"File not found: '{0}'".format(path)
             raise JSONTransformationError(msg)
         return data
@@ -83,13 +83,13 @@ class YAMLParser(object):
         data = None
         try:
             with open(path, 'r') as file:
-                data = yaml.load(file.read())
+                data = yaml.load(file.read(), yaml.SafeLoader)
         except YAMLError as e:
             msg = u"Cannot parse YAML from given path '{0}'. " +\
                   u"Original exception was:\n{1}: {2}"
             msg = msg.format(path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
-        except IOError as e:
+        except IOError:
             msg = u"File not found: '{0}'".format(path)
             raise YAMLTransformationError(msg)
         return data
@@ -164,7 +164,7 @@ class YAMLParser(object):
             if len(parts) == 2:
                 return self.message_factory(parts[1])
             return self.message_factory(parts[1], default=parts[2])
-        if not '.' in value:
+        if '.' not in value:
             return value
         names = value.split('.')
         if names[0] == 'context':

@@ -2,10 +2,15 @@
 History
 =======
 
-1.4 (unreleased)
-----------------
+1.3.1 (unreleased)
+------------------
 
-- No changes yet.
+- Pass ``yaml.SafeLoader`` loader to ``yaml.load`` to prevent arbitrary code
+  execution.
+  [rnix]
+
+- Cleanup.
+  [rnix]
 
 
 1.3 (2018-07-16)

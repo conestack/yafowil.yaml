@@ -15,6 +15,11 @@ import unittest
 import yaml
 
 
+def _(msg, default=None):
+    # dummy message factory
+    return default or msg
+
+
 class DummyContext(object):
     some_attr = ''
 
@@ -92,7 +97,7 @@ class TestYAML(YafowilTestCase):
     """
 
     def test_load_yaml(self):
-        self.assertEqual(yaml.load(self.yaml_tmpl), {
+        self.assertEqual(yaml.load(self.yaml_tmpl, yaml.SafeLoader), {
             'factory': 'form',
             'name': 'demoform',
             'props': {
@@ -142,8 +147,6 @@ class TestYAML(YafowilTestCase):
             file.write("{]")
         # Create dummy context
         context = DummyContext()
-        # Dummy message factory
-        _ = lambda x, default=None: default and default or x
         # Test inexistent yaml template path
         parser = YAMLParser('inexistent_path', context=context, message_factory=_)
         err = self.expect_error(
@@ -217,7 +220,6 @@ class TestYAML(YafowilTestCase):
         with open(template_path, 'w') as file:
             file.write(self.yaml_tmpl)
         context = DummyContext()
-        _ = lambda x, default=None: default and default or x
         form = parse_from_YAML(template_path, context, _)
         self.assertEqual(form.treerepr().split('\n'), [
             "<class 'yafowil.base.Widget'>: demoform",
@@ -425,7 +427,7 @@ class TestYAML(YafowilTestCase):
         form = YAMLParser(template_path, context=context)()
         try:
             form()
-        except ValueError as e:
+        except ValueError:
             self.check_output("""
             Traceback (most recent call last):
               ...
@@ -497,7 +499,6 @@ class TestYAML(YafowilTestCase):
         with open(json_file, 'w') as file:
             file.write(self.json_tmpl)
         context = DummyContext()
-        _ = lambda x, default=None: default and default or x
         form = YAMLParser(json_file, context=context, message_factory=_)()
         self.assertEqual(form.treerepr().split('\n'), [
             "<class 'yafowil.base.Widget'>: demoform",
