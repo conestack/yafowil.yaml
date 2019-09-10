@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from interlude import interact
-from pprint import pprint
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.tests import pxml
@@ -9,7 +7,6 @@ from yafowil.yaml import parse_from_YAML
 from yafowil.yaml.parser import JSONTransformationError
 from yafowil.yaml.parser import YAMLTransformationError
 import doctest
-import lxml.etree as etree
 import os
 import shutil
 import tempfile
