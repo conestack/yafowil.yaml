@@ -4,7 +4,9 @@ Changes
 1.3.2 (unreleased)
 ------------------
 
-- No changes yet.
+- Fix signature of ``yafowil.yaml.tests.test_vocab``. Property callbacks always
+  gets passed ``widget`` and ``data`` as of yafowil 3.0.0.
+  [rnix]
 
 
 1.3.1 (2020-07-09)

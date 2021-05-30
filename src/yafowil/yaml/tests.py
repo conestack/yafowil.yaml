@@ -53,7 +53,7 @@ class DummyContext(object):
     new_style = NewStyle()
 
 
-def test_vocab():
+def test_vocab(widget, data):
     return ['a', 'b', 'c']
 
 
