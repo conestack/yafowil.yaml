@@ -10,7 +10,7 @@ Source Code
 ===========
 
 The sources are in a GIT DVCS with its main branches at
-`github <http://github.com/bluedynamics/yafowil.yaml>`_.
+`github <http://github.com/conestack/yafowil.yaml>`_.
 
 We'd be happy to see many forks and pull-requests ;).
 
