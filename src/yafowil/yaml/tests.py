@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
-from yafowil.tests import pxml
 from yafowil.yaml import YAMLParser
 from yafowil.yaml import parse_from_YAML
 from yafowil.yaml.parser import JSONTransformationError
@@ -18,6 +17,10 @@ import yaml
 def _(msg, default=None):
     # dummy message factory
     return default or msg
+
+
+def pxml(xml):
+    print(fxml(xml))
 
 
 class DummyContext(object):
