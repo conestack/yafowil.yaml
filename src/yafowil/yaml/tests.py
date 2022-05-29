@@ -144,32 +144,34 @@ class TestYAML(YafowilTestCase):
         template_path = os.path.join(self.tempdir, 'tmpl.yaml')
         with open(template_path, 'w') as file:
             file.write(self.yaml_tmpl)
+
         # Write broken yaml template to tempdir
         trash_path = os.path.join(self.tempdir, 'trash.yaml')
         with open(trash_path, 'w') as file:
             file.write("{]")
+
         # Create dummy context
         context = DummyContext()
+
         # Test inexistent yaml template path
         parser = YAMLParser('inexistent_path', context=context, message_factory=_)
-        err = self.expect_error(
-            YAMLTransformationError,
-            parser
-        )
+        with self.assertRaises(YAMLTransformationError) as arc:
+            parser()
         msg = "File not found: 'inexistent_path'"
-        self.assertEqual(str(err), msg)
+        self.assertEqual(str(arc.exception), msg)
+
         # Test broken yaml template
         parser = YAMLParser(trash_path, context=context, message_factory=_)
-        err = self.expect_error(
-            YAMLTransformationError,
-            parser
-        )
+        with self.assertRaises(YAMLTransformationError) as arc:
+            parser()
         msg = "Cannot parse YAML from given path"
-        self.assertTrue(str(err).startswith(msg))
+        self.assertTrue(str(arc.exception).startswith(msg))
+
         # Test with sane yaml template
         parser = YAMLParser(template_path, context=context, message_factory=_)
         self.assertTrue(parser.path.endswith('tmpl.yaml'))
         self.assertTrue(parser.context is context)
+
         # Parse definition values. If definition is a string
         ob = object()
         self.assertEqual(parser.parse_definition_value(ob), ob)
@@ -206,17 +208,15 @@ class TestYAML(YafowilTestCase):
             parser.parse_definition_value('inexistent.inexistent'),
             'inexistent.inexistent'
         )
+
         fn = parser.parse_definition_value('expr:context.firstfield_value()')
         self.assertEqual(fn.__name__, 'fetch_value')
         self.assertEqual(fn.__module__, 'yafowil.yaml.parser')
         self.assertEqual(parser.parse_definition_value('i18n:foo'), 'foo')
         self.assertEqual(parser.parse_definition_value('i18n:foo:Foo'), 'Foo')
-        err = self.expect_error(
-            YAMLTransformationError,
-            parser.parse_definition_value,
-            'i18n:foo:Foo:Fooo'
-        )
-        self.assertEqual(str(err), 'to many : in i18n:foo:Foo:Fooo')
+        with self.assertRaises(YAMLTransformationError) as arc:
+            parser.parse_definition_value('i18n:foo:Foo:Fooo')
+        self.assertEqual(str(arc.exception), 'to many : in i18n:foo:Foo:Fooo')
 
     def test_parse_from_yaml(self):
         template_path = os.path.join(self.tempdir, 'tmpl.yaml')
@@ -231,7 +231,7 @@ class TestYAML(YafowilTestCase):
             ""
         ])
         self.assertEqual(sorted(form.attrs.items()), [('action', 'demoaction')])
-        self.check_output("""
+        self.checkOutput("""
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <div class="field" id="field-demoform-firstfield">
@@ -275,7 +275,7 @@ class TestYAML(YafowilTestCase):
             file.write(raw)
         context = DummyContext()
         form = YAMLParser(template_path, context=context)()
-        self.check_output("""
+        self.checkOutput("""
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <input class="text" id="input-demoform-firstfield"
@@ -309,7 +309,7 @@ class TestYAML(YafowilTestCase):
             file.write(raw)
         context = DummyContext()
         form = YAMLParser(template_path, context=context)()
-        self.check_output("""
+        self.checkOutput("""
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <table>
@@ -351,7 +351,7 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.check_output("""
+        self.checkOutput("""
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="nested_input text" id="input-mainform-sub"
@@ -378,7 +378,7 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.check_output("""
+        self.checkOutput("""
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="text" id="input-mainform-subfieldname"
@@ -403,7 +403,7 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.check_output("""
+        self.checkOutput("""
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="text" id="input-mainform-sub-fieldname"
@@ -428,30 +428,8 @@ class TestYAML(YafowilTestCase):
             file.write(raw)
         context = DummyContext()
         form = YAMLParser(template_path, context=context)()
-        try:
+        with self.assertRaises(ValueError):
             form()
-        except ValueError:
-            self.check_output("""
-            Traceback (most recent call last):
-              ...
-                data.rendered = renderer(self, data)
-                yafowil widget processing info:
-                - path      : demoform
-                - blueprints: ['form']
-                - task      : render
-                - descr     : failed at 'form' in mode 'edit'
-              File ...
-                data.value = self.getter(self, data)
-                yafowil widget processing info:
-                - path      : demoform.somefield
-                - blueprints: ['td', 'field', 'text']
-                - task      : run preprocessors
-                - descr     : execute
-              ...
-            ValueError: I am supposed to fail
-            """, traceback.format_exc())
-        else:
-            raise Exception('Exception expected but not thrown')
 
     json_tmpl = """
         {
@@ -513,20 +491,16 @@ class TestYAML(YafowilTestCase):
         with open(trash_file, 'w') as file:
             file.write("{]")
         parser = YAMLParser(trash_file, context=context, message_factory=_)
-        err = self.expect_error(
-            JSONTransformationError,
-            parser
-        )
+        with self.assertRaises(JSONTransformationError) as arc:
+            parser()
         msg = 'Cannot parse JSON from given path'
-        self.assertTrue(str(err).startswith(msg))
+        self.assertTrue(str(arc.exception).startswith(msg))
         nonexisting_file = os.path.join(self.tempdir, 'nonexisting.json')
         parser = YAMLParser(nonexisting_file, context=context, message_factory=_)
-        err = self.expect_error(
-            JSONTransformationError,
-            parser
-        )
+        with self.assertRaises(JSONTransformationError) as arc:
+            parser()
         msg = 'File not found'
-        self.assertTrue(str(err).startswith(msg))
+        self.assertTrue(str(arc.exception).startswith(msg))
 
 
 def test_suite():
