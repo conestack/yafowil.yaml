@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
+from uuid import UUID
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
 from yafowil.yaml import YAMLParser
 from yafowil.yaml import parse_from_YAML
+from yafowil.yaml import python_expression_globals
 from yafowil.yaml.parser import JSONTransformationError
 from yafowil.yaml.parser import YAMLTransformationError
 import doctest
 import os
 import shutil
 import tempfile
-import traceback
 import unittest
 import yaml
 
@@ -176,9 +177,10 @@ class TestYAML(YafowilTestCase):
         ob = object()
         self.assertEqual(parser.parse_definition_value(ob), ob)
         self.assertEqual(parser.parse_definition_value('foo'), 'foo')
+
         self.assertEqual(
-            parser.parse_definition_value('yafowil.yaml.tests.test_vocab'),
-            test_vocab
+            parser.parse_definition_value('yafowil.yaml.tests.test_vocab')(None, None),
+            test_vocab(None, None)
         )
         self.assertEqual(
             parser.parse_definition_value('context.firstfield_value'),
@@ -209,9 +211,24 @@ class TestYAML(YafowilTestCase):
             'inexistent.inexistent'
         )
 
+        int_ = parser.parse_definition_value('python:int')
+        self.assertTrue(int_ is int)
+        with self.assertRaises(NameError) as arc:
+            parser.parse_definition_value('python:UUID')
+        self.assertEqual(str(arc.exception), "name 'UUID' is not defined")
+        python_expression_globals['UUID'] = UUID
+        UUID_ = parser.parse_definition_value('python:UUID')
+        self.assertTrue(UUID_ is UUID)
+        class CustomUUID(UUID):
+            pass
+        parser.expression_globals['UUID'] = CustomUUID
+        UUID_ = parser.parse_definition_value('python:UUID')
+        self.assertTrue(UUID_ is CustomUUID)
+
         fn = parser.parse_definition_value('expr:context.firstfield_value()')
         self.assertEqual(fn.__name__, 'fetch_value')
         self.assertEqual(fn.__module__, 'yafowil.yaml.parser')
+
         self.assertEqual(parser.parse_definition_value('i18n:foo'), 'foo')
         self.assertEqual(parser.parse_definition_value('i18n:foo:Foo'), 'Foo')
         with self.assertRaises(YAMLTransformationError) as arc:
@@ -525,4 +542,5 @@ def test_suite():
 
 
 if __name__ == '__main__':
+    from yafowil.yaml import tests
     unittest.main(defaultTest='test_suite')                  # pragma: no cover

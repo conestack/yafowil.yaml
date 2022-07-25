@@ -1,11 +1,15 @@
 Changes
 =======
 
-1.3.2 (unreleased)
-------------------
+2.0 (unreleased)
+----------------
+
+- Add ``python:`` expressions. Needed for cases where property callbacks not
+  accept ``widget`` and ``data`` keyword arguments, e.g. ``datatype``.
+  [rnix]
 
 - Fix signature of ``yafowil.yaml.tests.test_vocab``. Property callbacks always
-  gets passed ``widget`` and ``data`` as of yafowil 3.0.0.
+  gets passed ``widget`` and ``data`` as of yafowil 3.0.
   [rnix]
 
 

@@ -19,8 +19,18 @@ def translate_path(path):
     return path
 
 
-def parse_from_YAML(path, context=None, message_factory=None):
-    return YAMLParser(translate_path(path), context, message_factory)()
+def parse_from_YAML(
+    path,
+    context=None,
+    message_factory=None,
+    expression_globals={}
+):
+    return YAMLParser(
+        translate_path(path),
+        context,
+        message_factory,
+        expression_globals
+    )()
 
 
 class CommonTransformationError(Exception):
@@ -48,12 +58,22 @@ class TBSupplement(object):
         return html and '<pre>{0}</pre>'.format(self.msg or self.msg)
 
 
+python_expression_globals = {}
+
+
 class YAMLParser(object):
 
-    def __init__(self, path, context=None, message_factory=None):
+    def __init__(
+        self,
+        path,
+        context=None,
+        message_factory=None,
+        expression_globals={}
+    ):
         self.path = path
         self.context = context
         self.message_factory = message_factory
+        self.expression_globals = expression_globals
 
     def __call__(self):
         return self.create_tree(self.load(self.path))
@@ -70,9 +90,10 @@ class YAMLParser(object):
             with open(path, 'r') as file:
                 data = json.load(file)
         except (SyntaxError, ValueError) as e:
-            msg = u"Cannot parse JSON from given path '{0}'. " +\
-                  u"Original exception was:\n{1}: {2}"
-            msg = msg.format(path, e.__class__.__name__, e)
+            msg = (
+                u"Cannot parse JSON from given path '{0}'. "
+                u"Original exception was:\n{1}: {2}"
+            ).format(path, e.__class__.__name__, e)
             raise JSONTransformationError(msg)
         except IOError:
             msg = u"File not found: '{0}'".format(path)
@@ -85,9 +106,10 @@ class YAMLParser(object):
             with open(path, 'r') as file:
                 data = yaml.load(file.read(), yaml.SafeLoader)
         except YAMLError as e:
-            msg = u"Cannot parse YAML from given path '{0}'. " +\
-                  u"Original exception was:\n{1}: {2}"
-            msg = msg.format(path, e.__class__.__name__, e)
+            msg = (
+                u"Cannot parse YAML from given path '{0}'. "
+                u"Original exception was:\n{1}: {2}"
+            ).format(path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
         except IOError:
             msg = u"File not found: '{0}'".format(path)
@@ -102,11 +124,13 @@ class YAMLParser(object):
             custom = dict()
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
-                for key in ['extractors',
-                            'edit_renderers',
-                            'preprocessors',
-                            'builders'
-                            'display_renderers']:
+                for key in [
+                    'extractors',
+                    'edit_renderers',
+                    'preprocessors',
+                    'builders'
+                    'display_renderers'
+                ]:
                     part = custom_value.get(key, [])
                     if not type(part) in ITER_TYPES:
                         part = [part]
@@ -150,21 +174,29 @@ class YAMLParser(object):
     def parse_definition_value(self, value):
         if not isinstance(value, STR_TYPE):
             return value
-        if value.startswith('expr:'):
+        if value.startswith('python:'):
+            expression_globals = {}
+            expression_globals.update(python_expression_globals)
+            expression_globals.update(self.expression_globals)
+            return eval(value[7:], expression_globals, {})
+        elif value.startswith('expr:'):
             def fetch_value(widget=None, data=None):
                 __traceback_supplement__ = (TBSupplement, self, str(value))
-                return eval(value[5:],
-                            {'context': self.context, 'widget': widget,
-                             'data': data}, {})
+                expression_globals = dict(
+                    context=self.context,
+                    widget=widget,
+                    data=data
+                )
+                return eval(value[5:], expression_globals, {})
             return fetch_value
-        if value.startswith('i18n:'):
+        elif value.startswith('i18n:'):
             parts = value.split(":")
             if len(parts) > 3:
                 raise YAMLTransformationError('to many : in {0}'.format(value))
             if len(parts) == 2:
                 return self.message_factory(parts[1])
             return self.message_factory(parts[1], default=parts[2])
-        if '.' not in value:
+        elif '.' not in value:
             return value
         names = value.split('.')
         if names[0] == 'context':

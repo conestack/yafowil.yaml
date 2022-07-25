@@ -8,8 +8,8 @@ def read_file(name):
         return f.read()
 
 
-version = '1.3.2.dev0'
-shortdesc = 'YAFOWIL - YAML-/ JSON-parser for widget trees.'
+version = '2.0.dev0'
+shortdesc = 'YAFOWIL - YAML/JSON-parser for widget trees.'
 longdesc = '\n\n'.join([read_file(name) for name in [
     'README.rst',
     'CHANGES.rst',
