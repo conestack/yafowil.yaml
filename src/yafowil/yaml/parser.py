@@ -70,9 +70,10 @@ class YAMLParser(object):
             with open(path, 'r') as file:
                 data = json.load(file)
         except (SyntaxError, ValueError) as e:
-            msg = u"Cannot parse JSON from given path '{0}'. " +\
-                  u"Original exception was:\n{1}: {2}"
-            msg = msg.format(path, e.__class__.__name__, e)
+            msg = (
+                u"Cannot parse JSON from given path '{0}'. "
+                u"Original exception was:\n{1}: {2}"
+            ).format(path, e.__class__.__name__, e)
             raise JSONTransformationError(msg)
         except IOError:
             msg = u"File not found: '{0}'".format(path)
@@ -85,9 +86,10 @@ class YAMLParser(object):
             with open(path, 'r') as file:
                 data = yaml.load(file.read(), yaml.SafeLoader)
         except YAMLError as e:
-            msg = u"Cannot parse YAML from given path '{0}'. " +\
-                  u"Original exception was:\n{1}: {2}"
-            msg = msg.format(path, e.__class__.__name__, e)
+            msg = (
+                u"Cannot parse YAML from given path '{0}'. "
+                u"Original exception was:\n{1}: {2}"
+            ).format(path, e.__class__.__name__, e)
             raise YAMLTransformationError(msg)
         except IOError:
             msg = u"File not found: '{0}'".format(path)
@@ -102,11 +104,13 @@ class YAMLParser(object):
             custom = dict()
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
-                for key in ['extractors',
-                            'edit_renderers',
-                            'preprocessors',
-                            'builders'
-                            'display_renderers']:
+                for key in [
+                    'extractors',
+                    'edit_renderers',
+                    'preprocessors',
+                    'builders'
+                    'display_renderers'
+                ]:
                     part = custom_value.get(key, [])
                     if not type(part) in ITER_TYPES:
                         part = [part]
@@ -153,9 +157,12 @@ class YAMLParser(object):
         if value.startswith('expr:'):
             def fetch_value(widget=None, data=None):
                 __traceback_supplement__ = (TBSupplement, self, str(value))
-                return eval(value[5:],
-                            {'context': self.context, 'widget': widget,
-                             'data': data}, {})
+                globs = {
+                    'context': self.context,
+                    'widget': widget,
+                    'data': data
+                }
+                return eval(value[5:], globs, {})
             return fetch_value
         if value.startswith('i18n:'):
             parts = value.split(":")

@@ -193,9 +193,11 @@ To adress a specific pyhton package path prefix the filename with
     >>> from yafowil.yaml import parse_from_YAML
 
     >>> rendering_context = FormRenderingContext()
-    >>> form = parse_from_YAML('yafowil.yaml:demo_form.yaml',
-    ...                        context=rendering_context,
-    ...                        message_factory=message_factory)
+    >>> form = parse_from_YAML(
+    ...     'yafowil.yaml:demo_form.yaml',
+    ...     context=rendering_context,
+    ...     message_factory=message_factory
+    ... )
 
 This results into...::
 
