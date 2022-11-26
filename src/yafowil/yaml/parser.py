@@ -108,7 +108,7 @@ class YAMLParser(object):
                     'extractors',
                     'edit_renderers',
                     'preprocessors',
-                    'builders'
+                    'builders',
                     'display_renderers'
                 ]:
                     part = custom_value.get(key, [])

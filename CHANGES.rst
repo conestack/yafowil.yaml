@@ -4,6 +4,9 @@ Changes
 1.3.2 (unreleased)
 ------------------
 
+- Fix parsing of ``builders`` and ``display_renderers`` in custom parts.
+  [rnix]
+
 - Fix signature of ``yafowil.yaml.tests.test_vocab``. Property callbacks always
   gets passed ``widget`` and ``data`` as of yafowil 3.0.0.
   [rnix]
