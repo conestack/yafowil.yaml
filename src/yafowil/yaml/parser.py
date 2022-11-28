@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from node.utils import UNSET
 from yafowil.base import factory
-from yafowil.compat import STR_TYPE
 from yafowil.compat import ITER_TYPES
+from yafowil.compat import STR_TYPE
 from yaml.error import YAMLError
 import json
 import os
@@ -128,7 +128,7 @@ class YAMLParser(object):
                     'extractors',
                     'edit_renderers',
                     'preprocessors',
-                    'builders'
+                    'builders',
                     'display_renderers'
                 ]:
                     part = custom_value.get(key, [])
