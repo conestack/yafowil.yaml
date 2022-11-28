@@ -119,8 +119,7 @@ class YAMLParser(object):
     def create_tree(self, data):
         def call_factory(defs):
             props = dict()
-            for k, v in defs.get('props', dict()).items():
-                props[k] = self.parse_definition_value(v)
+            props = self.parse_attribute(defs.get('props', dict()))
             custom = dict()
             for custom_key, custom_value in defs.get('custom', dict()).items():
                 custom_props = list()
@@ -170,6 +169,16 @@ class YAMLParser(object):
         root = call_factory(data)
         create_children(root, data.get('widgets', []))
         return root
+
+    def parse_attribute(self, value):
+        if not isinstance(value, dict):
+            return self.parse_definition_value(value)
+        for k, v in value.items():
+            if isinstance(v, dict):
+                self.parse_attribute(v)
+            else:
+                value[k] = self.parse_definition_value(v)
+        return value
 
     def parse_definition_value(self, value):
         if not isinstance(value, STR_TYPE):

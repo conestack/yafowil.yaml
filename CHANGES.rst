@@ -11,6 +11,10 @@ Changes
   gets passed ``widget`` and ``data`` as of yafowil 3.0.0.
   [rnix]
 
+- Parse values of attributes (data-Attributes) if type() is dict.
+  HTML5 Data-Attributes with i18n or callables are possible now.
+  [2silver]
+
 **Breaking changes:**
 
 - Add ``python:`` expressions. Needed for cases where property callbacks not
