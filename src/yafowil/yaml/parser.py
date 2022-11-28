@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from node.utils import UNSET
 from yafowil.base import factory
-from yafowil.compat import STR_TYPE
 from yafowil.compat import ITER_TYPES
+from yafowil.compat import STR_TYPE
 from yaml.error import YAMLError
 import json
 import os
@@ -19,8 +19,18 @@ def translate_path(path):
     return path
 
 
-def parse_from_YAML(path, context=None, message_factory=None):
-    return YAMLParser(translate_path(path), context, message_factory)()
+def parse_from_YAML(
+    path,
+    context=None,
+    message_factory=None,
+    expression_globals={}
+):
+    return YAMLParser(
+        translate_path(path),
+        context,
+        message_factory,
+        expression_globals
+    )()
 
 
 class CommonTransformationError(Exception):
@@ -48,12 +58,22 @@ class TBSupplement(object):
         return html and '<pre>{0}</pre>'.format(self.msg or self.msg)
 
 
+python_expression_globals = {}
+
+
 class YAMLParser(object):
 
-    def __init__(self, path, context=None, message_factory=None):
+    def __init__(
+        self,
+        path,
+        context=None,
+        message_factory=None,
+        expression_globals={}
+    ):
         self.path = path
         self.context = context
         self.message_factory = message_factory
+        self.expression_globals = expression_globals
 
     def __call__(self):
         return self.create_tree(self.load(self.path))
@@ -154,24 +174,29 @@ class YAMLParser(object):
     def parse_definition_value(self, value):
         if not isinstance(value, STR_TYPE):
             return value
-        if value.startswith('expr:'):
+        if value.startswith('python:'):
+            expression_globals = {}
+            expression_globals.update(python_expression_globals)
+            expression_globals.update(self.expression_globals)
+            return eval(value[7:], expression_globals, {})
+        elif value.startswith('expr:'):
             def fetch_value(widget=None, data=None):
                 __traceback_supplement__ = (TBSupplement, self, str(value))
-                globs = {
-                    'context': self.context,
-                    'widget': widget,
-                    'data': data
-                }
-                return eval(value[5:], globs, {})
+                expression_globals = dict(
+                    context=self.context,
+                    widget=widget,
+                    data=data
+                )
+                return eval(value[5:], expression_globals, {})
             return fetch_value
-        if value.startswith('i18n:'):
+        elif value.startswith('i18n:'):
             parts = value.split(":")
             if len(parts) > 3:
                 raise YAMLTransformationError('to many : in {0}'.format(value))
             if len(parts) == 2:
                 return self.message_factory(parts[1])
             return self.message_factory(parts[1], default=parts[2])
-        if '.' not in value:
+        elif '.' not in value:
             return value
         names = value.split('.')
         if names[0] == 'context':

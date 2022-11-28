@@ -131,10 +131,22 @@ strings, access to a rendering context and pointers to callables.
     by calling given message factory.
 
 ``expr:``
-    If definition value starts with ``expr:``, a callback wrapper is created
-    which gets executed each time the widget tree gets rendered. For security
-    reasons, only rendering ``context``, ``widget`` and ``data`` are available
+    If definition value starts with ``expr:``, a yafowil callback wrapper gets
+    created, accepting ``widget`` and ``data`` keyword arguments, which is
+    executed when the widget tree is processed. For security reasons, only
+    rendering ``context``, ``widget`` and ``data`` are available
     in expressions.
+
+``python:``
+    If definition value starts with ``python:`` it gets evaluated as plain
+    python expression. This is useful for the rare cases where yafowil or one
+    of it's addons expects a callable not accepting ``widget`` and ``data``
+    as arguments, like ``datatype`` does. By default, these expressions get an
+    empty globals dictionary. Python expression globals can be customized
+    either globally by adding values to ``yafowil.yaml.python_expression_globals``
+    or per parser run by passing ``expression_globals`` to ``YAMLParser``
+    constructor respective ``parse_from_YAML`` function. Parser specific globals
+    take precedence over globally defined ones.
 
 ``context``
     If definition value starts with ``context``, rendering context is used to
@@ -149,7 +161,9 @@ Define rendering context
 ------------------------
 
 A rendering context has to be provided. Refering to the form description
-example above, this may look like::
+example above, this may look like:
+
+.. code-block:: pycon
 
     >>> class FormRenderingContext(object):
     ...
@@ -176,7 +190,9 @@ Create Message Factory
 
 Unless no others are registered one want to use message factories from
 ``pyramid.i18n`` or ``zope.i18nmessageid``. See refering documentation for
-details. Here we create a dummy message factory::
+details. Here we create a dummy message factory:
+
+.. code-block:: pycon
 
     >>> message_factory = lambda x: x
 
@@ -187,16 +203,20 @@ Creating YAFOWIL-Forms form YAML-Files
 To create a yafowil widget tree from YAML, use ``yafowil.yaml.parse_from_YAML``.
 This accepts also JSON file files ending with ``.json``.
 To adress a specific pyhton package path prefix the filename with
-``my.module:``::
+``my.module:``:
+
+.. code-block:: pycon
 
     >>> import yafowil.loader
     >>> from yafowil.yaml import parse_from_YAML
 
     >>> rendering_context = FormRenderingContext()
+    >>> expression_globals = {}
     >>> form = parse_from_YAML(
     ...     'yafowil.yaml:demo_form.yaml',
     ...     context=rendering_context,
-    ...     message_factory=message_factory
+    ...     message_factory=message_factory,
+    ...     expression_globals=expression_globals
     ... )
 
 This results into...::
