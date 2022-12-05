@@ -1,7 +1,7 @@
 Changes
 =======
 
-2.0 (unreleased)
+2.0 (2022-12-05)
 ----------------
 
 - Fix parsing of ``builders`` and ``display_renderers`` in custom parts.
