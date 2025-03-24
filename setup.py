@@ -15,7 +15,6 @@ longdesc = '\n\n'.join([read_file(name) for name in [
     'CHANGES.rst',
     'LICENSE.rst'
 ]])
-tests_require = ['yafowil[test]']
 
 
 setup(
@@ -49,9 +48,7 @@ setup(
         'yafowil>1.0.4',
         'PyYAML',
     ],
-    tests_require=tests_require,
-    test_suite="yafowil.yaml.tests.test_suite",
     extras_require=dict(
-        test=tests_require,
+        test=['yafowil[test]'],
     )
 )
