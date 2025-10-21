@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yafowil.yaml"
+version = "2.1.dev0"
+description = "YAFOWIL - YAML/JSON-parser for widget trees."
+readme = "README.rst"
+license = {text = "Simplified BSD"}
+authors = [{name = "Yafowil Contributors", email = "dev@conestack.org"}]
+keywords = ["html", "input", "widgets", "form", "compound"]
+classifiers = [
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Topic :: Software Development",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+]
+dependencies = [
+    "yafowil>1.0.4",
+    "PyYAML",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.zest-releaser]
+create-wheel = true
