@@ -1,7 +1,7 @@
 It is possible to describe YAFOWIL forms using `YAML <http://www.yaml.org/>`_
 as description language.
 
-`JSON <http://www.json.org/JSON>`_ syntax is a
+`JSON <https://www.json.org/json-en.html>`_ syntax is a
 `subset <https://en.wikipedia.org/wiki/YAML#JSON>`_ of YAML version 1.2, so we
 support JSON too.
 
