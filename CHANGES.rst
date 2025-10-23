@@ -4,7 +4,8 @@ Changes
 2.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Switch from buildout to mxmake.
+  [rnix]
 
 
 2.0 (2022-12-05)
