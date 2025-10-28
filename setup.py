@@ -45,7 +45,7 @@ setup(
     zip_safe=False,
     install_requires=[
         'setuptools',
-        'yafowil>1.0.4',
+        'yafowil>1.0.4,<4.0.0',
         'PyYAML',
     ],
     extras_require=dict(

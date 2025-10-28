@@ -4,6 +4,9 @@ Changes
 2.1 (unreleased)
 ----------------
 
+- Pin upper versions of dependencies.
+  [rnix]
+
 - Switch from buildout to mxmake.
   [rnix]
 
