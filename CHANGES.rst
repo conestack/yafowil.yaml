@@ -1,8 +1,8 @@
 Changes
 =======
 
-2.1 (unreleased)
-----------------
+3.0.0 (unreleased)
+------------------
 
 - Switch from buildout to mxmake.
   [rnix]

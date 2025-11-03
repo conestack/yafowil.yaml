@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "yafowil.yaml"
-version = "2.1.dev0"
+version = "3.0.0.dev0"
 description = "YAFOWIL - YAML/JSON-parser for widget trees."
 readme = "README.rst"
 license = {text = "Simplified BSD"}
