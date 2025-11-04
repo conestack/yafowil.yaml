@@ -23,7 +23,7 @@ classifiers = [
     "License :: OSI Approved :: BSD License",
 ]
 dependencies = [
-    "yafowil>1.0.4",
+    "yafowil>3.99",
     "PyYAML",
 ]
 
