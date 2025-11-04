@@ -15,8 +15,8 @@ import yaml
 def translate_path(path):
     if path.find(':') > -1:
         package, subpath = path.split(':')
-        with importlib.resources.path(package) as base_path:
-            path = str(base_path / subpath)
+        with importlib.resources.path(package, subpath) as path:
+            return str(path)
     return path
 
 
