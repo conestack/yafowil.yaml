@@ -57,7 +57,7 @@ class DummyContext(object):
     new_style = NewStyle()
 
 
-def test_vocab(widget, data):
+def _test_vocab(widget, data):
     return ['a', 'b', 'c']
 
 
@@ -96,7 +96,7 @@ class TestYAML(YafowilTestCase):
             props:
                 label.title: i18n:second_field:Second Field
                 multivalued: True
-                vocabulary: yafowil.yaml.tests.test_vocab
+                vocabulary: yafowil.yaml.tests.test_yaml._test_vocab
             custom:
                 custom_stuff:
                     extractors:
@@ -136,7 +136,7 @@ class TestYAML(YafowilTestCase):
                     'props': {
                         'label.title': 'i18n:second_field:Second Field',
                         'multivalued': True,
-                        'vocabulary': 'yafowil.yaml.tests.test_vocab'
+                        'vocabulary': 'yafowil.yaml.tests.test_yaml._test_vocab'
                     },
                     'custom': {
                         'custom_stuff': {
@@ -191,8 +191,8 @@ class TestYAML(YafowilTestCase):
         self.assertEqual(parser.parse_definition_value('foo'), 'foo')
 
         self.assertEqual(
-            parser.parse_definition_value('yafowil.yaml.tests.test_vocab')(None, None),
-            test_vocab(None, None)
+            parser.parse_definition_value('yafowil.yaml.tests.test_yaml._test_vocab')(None, None),
+            _test_vocab(None, None)
         )
         self.assertEqual(
             parser.parse_definition_value('context.firstfield_value'),
@@ -498,7 +498,7 @@ class TestYAML(YafowilTestCase):
                     "props": {
                         "label.title": "i18n:second_field:Second Field",
                         "multivalued": true,
-                        "vocabulary": "yafowil.yaml.tests.test_vocab"
+                        "vocabulary": "yafowil.yaml.tests.test_yaml._test_vocab"
                     },
                     "value": [
                         "a",
@@ -545,7 +545,7 @@ def test_suite():
     )
     suite.addTest(
         doctest.DocFileSuite(
-            'sphinx.rst',
+            '../sphinx.rst',
             optionflags=(
                 doctest.NORMALIZE_WHITESPACE |
                 doctest.ELLIPSIS |
