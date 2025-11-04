@@ -4,9 +4,9 @@ from yafowil.base import factory
 from yafowil.compat import ITER_TYPES
 from yafowil.compat import STR_TYPE
 from yaml.error import YAMLError
+import importlib
 import json
 import os
-import pkg_resources
 import sys
 import yafowil.loader  # noqa  # loads registry
 import yaml
@@ -15,7 +15,8 @@ import yaml
 def translate_path(path):
     if path.find(':') > -1:
         package, subpath = path.split(':')
-        path = pkg_resources.resource_filename(package, subpath)
+        with importlib.resources.path(package) as base_path:
+            path = str(base_path / subpath)
     return path
 
 
