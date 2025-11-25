@@ -32,6 +32,13 @@ test = [
     "pytest",
 ]
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "/.github/",
+    "/Makefile",
+    "/mx.ini",
+]
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/yafowil"]
 
