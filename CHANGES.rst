@@ -4,6 +4,15 @@ Changes
 3.0.0 (unreleased)
 ------------------
 
+- No changes yet.
+
+
+2.1 (2025-10-28)
+----------------
+
+- Pin upper versions of dependencies.
+  [rnix]
+
 - Switch from buildout to mxmake.
   [rnix]
 
