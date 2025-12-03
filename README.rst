@@ -1,3 +1,15 @@
+.. image:: https://img.shields.io/pypi/v/yafowil.yaml.svg
+    :target: https://pypi.python.org/pypi/yafowil.yaml
+    :alt: Latest PyPI version
+
+.. image:: https://img.shields.io/pypi/dm/yafowil.yaml.svg
+    :target: https://pypi.python.org/pypi/yafowil.yaml
+    :alt: Number of PyPI downloads
+
+.. image:: https://github.com/conestack/yafowil.yaml/actions/workflows/test_py.yml/badge.svg
+    :target: https://github.com/conestack/yafowil.yaml/actions/workflows/test_py.yml
+    :alt: Test yafowil.yaml
+
 Write YAFOWIL forms in YAML or JSON notation.
 
 Documentation
