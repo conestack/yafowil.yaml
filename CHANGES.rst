@@ -4,6 +4,10 @@ Changes
 3.0.1 (unreleased)
 ------------------
 
+- Resolve package paths with ``importlib.resources.files`` instead of the
+  deprecated ``importlib.resources.path``.
+  [rnix]
+
 - Modernise the code ruff flags as outdated: ``u''`` prefixes, ``class
   X(object)``, ``.format()`` over f-strings, ``IOError`` over ``OSError`` and
   redundant ``open()`` mode. Behaviour unchanged. ``super(Class, self)`` is

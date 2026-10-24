@@ -1,7 +1,7 @@
 from node.utils import UNSET
 from yafowil.base import factory
 from yaml.error import YAMLError
-import importlib
+import importlib.resources
 import json
 import os
 import sys
@@ -12,12 +12,12 @@ import yaml
 def translate_path(path):
     if path.find(':') > -1:
         package, subpath = path.split(':')
-        subpath = subpath.split('/')
-        # importlib.resources.path is clumsy below python 3.13
-        with importlib.resources.path(package, subpath[0]) as path:
-            for part in subpath[1:]:
-                path = path / part
-            return str(path)
+        resource = importlib.resources.files(package)
+        # Joined part by part: below Python 3.11 ``joinpath`` of a namespace
+        # package takes one child only.
+        for part in subpath.split('/'):
+            resource = resource / part
+        return str(resource)
     return path
 
 
