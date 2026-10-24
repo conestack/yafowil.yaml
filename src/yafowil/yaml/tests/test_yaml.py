@@ -5,12 +5,13 @@ from yafowil.yaml import YAMLParser
 from yafowil.yaml import parse_from_YAML
 from yafowil.yaml import python_expression_globals
 from yafowil.yaml.parser import JSONTransformationError
+from yafowil.yaml.parser import TBSupplement
 from yafowil.yaml.parser import YAMLTransformationError
+from yafowil.yaml.parser import translate_path
 import doctest
 import os
 import shutil
 import tempfile
-import unittest
 import yaml
 
 
@@ -43,10 +44,6 @@ class DummyContext(object):
         return data.rendered
 
     class NewStyle(object):
-        class Another(object):
-            def test_method_1(self, widget, data):
-                return 'Test method 1'
-
         class OldStyle:
             def test_method_2(self, widget, data):
                 return 'Test method 2'
@@ -202,6 +199,10 @@ class TestYAML(YafowilTestCase):
             context.new_style.old_style.test_method_2
         )
         self.assertEqual(
+            context.new_style.old_style.test_method_2(None, None),
+            'Test method 2'
+        )
+        self.assertEqual(
             parser.parse_definition_value('context.NewStyle.old_style.test_method_2'),
             context.new_style.old_style.test_method_2
         )
@@ -292,6 +293,28 @@ class TestYAML(YafowilTestCase):
           </div>
         </form>
         """, fxml(form()))
+
+    def test_parse_from_yaml_custom_extractors(self):
+        template_path = os.path.join(self.tempdir, 'tmpl.yaml')
+        with open(template_path, 'w') as file:
+            file.write(self.yaml_tmpl)
+        form = parse_from_YAML(template_path, DummyContext(), _)
+        data = form.extract({'demoform.secondfield': ['a', 'c']})
+        self.assertEqual(data['secondfield'].extracted, ['a', 'c'])
+
+    def test_parse_from_yaml_package_path(self):
+        self.assertEqual(
+            translate_path('yafowil.yaml:tests/__init__.py'),
+            os.path.join(os.path.dirname(__file__), '__init__.py')
+        )
+
+    def test_parse_attribute(self):
+        parser = YAMLParser(None, message_factory=_)
+        self.assertEqual(parser.parse_attribute('python:1 + 1'), 2)
+        self.assertEqual(
+            parser.parse_attribute({'a': {'b': 'python:1 + 1'}}),
+            {'a': {'b': 2}}
+        )
 
     def test_yaml_form_flat(self):
         raw = """
@@ -465,6 +488,10 @@ class TestYAML(YafowilTestCase):
         with self.assertRaises(ValueError):
             form()
 
+    def test_traceback_supplement_info(self):
+        supplement = TBSupplement(object(), 'Failing expression')
+        self.assertEqual(supplement.getInfo(), '<pre>Failing expression</pre>')
+
     json_tmpl = """
         {
             "factory": "form",
@@ -537,14 +564,12 @@ class TestYAML(YafowilTestCase):
         self.assertTrue(str(arc.exception).startswith(msg))
 
 
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(
-        unittest.TestLoader().loadTestsFromTestCase(TestYAML)
-    )
-    suite.addTest(
-        doctest.DocFileSuite(
-            '../sphinx.rst',
+class TestSphinxDocumentation(YafowilTestCase):
+
+    def test_sphinx_rst_examples(self):
+        result = doctest.testfile(
+            os.path.join(os.path.dirname(__file__), '..', 'sphinx.rst'),
+            module_relative=False,
             optionflags=(
                 doctest.NORMALIZE_WHITESPACE |
                 doctest.ELLIPSIS |
@@ -554,10 +579,4 @@ def test_suite():
                 'pxml': pxml
             }
         )
-    )
-    return suite
-
-
-if __name__ == '__main__':
-    from yafowil.yaml import tests
-    unittest.main(defaultTest='test_suite')                  # pragma: no cover
+        self.assertEqual(result.failed, 0)
