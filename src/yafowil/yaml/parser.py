@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 from node.utils import UNSET
 from yafowil.base import factory
-from yafowil.compat import ITER_TYPES
-from yafowil.compat import STR_TYPE
 from yaml.error import YAMLError
 import importlib
 import json
@@ -136,7 +133,7 @@ class YAMLParser(object):
                     'display_renderers'
                 ]:
                     part = custom_value.get(key, [])
-                    if not type(part) in ITER_TYPES:
+                    if not type(part) in (list, tuple):
                         part = [part]
                     part = [self.parse_definition_value(pt) for pt in part]
                     custom_props.append(part)
@@ -186,7 +183,7 @@ class YAMLParser(object):
         return value
 
     def parse_definition_value(self, value):
-        if not isinstance(value, STR_TYPE):
+        if not isinstance(value, str):
             return value
         if value.startswith('python:'):
             expression_globals = {}

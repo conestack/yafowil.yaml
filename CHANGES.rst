@@ -4,7 +4,12 @@ Changes
 3.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop the Python 2 remnants: ``yafowil.compat`` usage and ``# -*- coding:
+  utf-8 -*-``.
+  [rnix]
+
+- Declare ``requires-python = ">=3.10"``.
+  [rnix]
 
 
 3.0.0 (2026-02-03)

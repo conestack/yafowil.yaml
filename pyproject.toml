@@ -7,6 +7,7 @@ name = "yafowil.yaml"
 version = "3.0.1.dev0"
 description = "YAFOWIL - YAML/JSON-parser for widget trees."
 readme = "README.rst"
+requires-python = ">=3.10"
 license = {text = "Simplified BSD"}
 authors = [{name = "Yafowil Contributors", email = "dev@conestack.org"}]
 keywords = ["html", "input", "widgets", "form", "compound"]

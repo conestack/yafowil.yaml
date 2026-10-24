@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from uuid import UUID
 from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
