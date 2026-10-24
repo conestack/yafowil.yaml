@@ -4,6 +4,21 @@ Changes
 3.0.1 (unreleased)
 ------------------
 
+- Modernise the code ruff flags as outdated: ``u''`` prefixes, ``class
+  X(object)``, ``.format()`` over f-strings, ``IOError`` over ``OSError`` and
+  redundant ``open()`` mode. Behaviour unchanged. ``super(Class, self)`` is
+  kept, see ``cone.app``.
+  [rnix]
+
+- Sort the imports with ruff (one per line, ``from`` imports first, no
+  sections) and format the code with ``ruff format`` (90 characters per line,
+  single quotes).
+  [rnix]
+
+- Pin the ruff configuration in ``pyproject.toml``: rule selection, import
+  sorting and formatter settings, ``make check`` runs ``ruff check`` with it.
+  [rnix]
+
 - Drop the Python 2 remnants: ``yafowil.compat`` usage and ``# -*- coding:
   utf-8 -*-``.
   [rnix]

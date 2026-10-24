@@ -1,13 +1,13 @@
 from uuid import UUID
-from yafowil.tests import YafowilTestCase
 from yafowil.tests import fxml
-from yafowil.yaml import YAMLParser
+from yafowil.tests import YafowilTestCase
 from yafowil.yaml import parse_from_YAML
 from yafowil.yaml import python_expression_globals
+from yafowil.yaml import YAMLParser
 from yafowil.yaml.parser import JSONTransformationError
 from yafowil.yaml.parser import TBSupplement
-from yafowil.yaml.parser import YAMLTransformationError
 from yafowil.yaml.parser import translate_path
+from yafowil.yaml.parser import YAMLTransformationError
 import doctest
 import os
 import shutil
@@ -24,7 +24,7 @@ def pxml(xml):
     print(fxml(xml))
 
 
-class DummyContext(object):
+class DummyContext:
     some_attr = ''
 
     @property
@@ -43,7 +43,7 @@ class DummyContext(object):
     def custom_renderer(self, widget, data):
         return data.rendered
 
-    class NewStyle(object):
+    class NewStyle:
         class OldStyle:
             def test_method_2(self, widget, data):
                 return 'Test method 2'
@@ -58,7 +58,6 @@ def _test_vocab(widget, data):
 
 
 class TestYAML(YafowilTestCase):
-
     def setUp(self):
         super(TestYAML, self).setUp()
         self.tempdir = tempfile.mkdtemp()
@@ -102,50 +101,54 @@ class TestYAML(YafowilTestCase):
     """
 
     def test_load_yaml(self):
-        self.assertEqual(yaml.load(self.yaml_tmpl, yaml.SafeLoader), {
-            'factory': 'form',
-            'name': 'demoform',
-            'props': {
-                'action': 'demoaction'
-            },
-            'widgets': [{
-                'firstfield': {
-                    'factory': 'field:label:error:text',
-                    'value': 'context.firstfield_value',
-                    'props': {
-                        'description': 'I am the description',
-                        'label': 'i18n:First Field',
-                        'required': 'I am required',
-                        'data': {
-                            'flat': 'I am a flat data-attribute',
-                            'i18n': 'i18n:nested_firstfield:i18n Nested First Field',
-                            'nested': {
-                                'nested-i18n': 'i18n:nested_firstfield:i18n Nested First Field'
-                            }
+        self.assertEqual(
+            yaml.load(self.yaml_tmpl, yaml.SafeLoader),
+            {
+                'factory': 'form',
+                'name': 'demoform',
+                'props': {'action': 'demoaction'},
+                'widgets': [
+                    {
+                        'firstfield': {
+                            'factory': 'field:label:error:text',
+                            'value': 'context.firstfield_value',
+                            'props': {
+                                'description': 'I am the description',
+                                'label': 'i18n:First Field',
+                                'required': 'I am required',
+                                'data': {
+                                    'flat': 'I am a flat data-attribute',
+                                    'i18n': 'i18n:nested_firstfield:i18n Nested First Field',
+                                    'nested': {
+                                        'nested-i18n': 'i18n:nested_firstfield:i18n Nested First Field'
+                                    },
+                                },
+                            },
                         }
-                    }
-                }
-            }, {
-                'secondfield': {
-                    'factory': 'field:label:*custom_stuff:error:select',
-                    'value': ['a', 'b'],
-                    'props': {
-                        'label.title': 'i18n:second_field:Second Field',
-                        'multivalued': True,
-                        'vocabulary': 'yafowil.yaml.tests.test_yaml._test_vocab'
                     },
-                    'custom': {
-                        'custom_stuff': {
-                            'edit_renderers': 'context.custom_renderer',
-                            'extractors': [
-                                'context.custom_extractor_1',
-                                'context.custom_extractor_2'
-                            ]
+                    {
+                        'secondfield': {
+                            'factory': 'field:label:*custom_stuff:error:select',
+                            'value': ['a', 'b'],
+                            'props': {
+                                'label.title': 'i18n:second_field:Second Field',
+                                'multivalued': True,
+                                'vocabulary': 'yafowil.yaml.tests.test_yaml._test_vocab',
+                            },
+                            'custom': {
+                                'custom_stuff': {
+                                    'edit_renderers': 'context.custom_renderer',
+                                    'extractors': [
+                                        'context.custom_extractor_1',
+                                        'context.custom_extractor_2',
+                                    ],
+                                }
+                            },
                         }
-                    }
-                }
-            }]
-        })
+                    },
+                ],
+            },
+        )
 
     def test_yaml_parser(self):
         # Test YamlParser for yafowil forms
@@ -157,7 +160,7 @@ class TestYAML(YafowilTestCase):
         # Write broken yaml template to tempdir
         trash_path = os.path.join(self.tempdir, 'trash.yaml')
         with open(trash_path, 'w') as file:
-            file.write("{]")
+            file.write('{]')
 
         # Create dummy context
         context = DummyContext()
@@ -173,7 +176,7 @@ class TestYAML(YafowilTestCase):
         parser = YAMLParser(trash_path, context=context, message_factory=_)
         with self.assertRaises(YAMLTransformationError) as arc:
             parser()
-        msg = "Cannot parse YAML from given path"
+        msg = 'Cannot parse YAML from given path'
         self.assertTrue(str(arc.exception).startswith(msg))
 
         # Test with sane yaml template
@@ -187,40 +190,39 @@ class TestYAML(YafowilTestCase):
         self.assertEqual(parser.parse_definition_value('foo'), 'foo')
 
         self.assertEqual(
-            parser.parse_definition_value('yafowil.yaml.tests.test_yaml._test_vocab')(None, None),
-            _test_vocab(None, None)
+            parser.parse_definition_value('yafowil.yaml.tests.test_yaml._test_vocab')(
+                None, None
+            ),
+            _test_vocab(None, None),
         )
         self.assertEqual(
             parser.parse_definition_value('context.firstfield_value'),
-            context.firstfield_value
+            context.firstfield_value,
         )
         self.assertEqual(
             parser.parse_definition_value('context.new_style.old_style.test_method_2'),
-            context.new_style.old_style.test_method_2
+            context.new_style.old_style.test_method_2,
         )
         self.assertEqual(
-            context.new_style.old_style.test_method_2(None, None),
-            'Test method 2'
+            context.new_style.old_style.test_method_2(None, None), 'Test method 2'
         )
         self.assertEqual(
             parser.parse_definition_value('context.NewStyle.old_style.test_method_2'),
-            context.new_style.old_style.test_method_2
+            context.new_style.old_style.test_method_2,
         )
         self.assertEqual(
             parser.parse_definition_value('context.NewStyle.OldStyle.test_method_2'),
-            DummyContext.new_style.OldStyle.test_method_2
+            DummyContext.new_style.OldStyle.test_method_2,
         )
         self.assertEqual(
-            parser.parse_definition_value('yafowil.inexistent'),
-            'yafowil.inexistent'
+            parser.parse_definition_value('yafowil.inexistent'), 'yafowil.inexistent'
         )
         self.assertEqual(
-            parser.parse_definition_value('context.inexistent'),
-            'context.inexistent'
+            parser.parse_definition_value('context.inexistent'), 'context.inexistent'
         )
         self.assertEqual(
             parser.parse_definition_value('inexistent.inexistent'),
-            'inexistent.inexistent'
+            'inexistent.inexistent',
         )
 
         int_ = parser.parse_definition_value('python:int')
@@ -231,8 +233,10 @@ class TestYAML(YafowilTestCase):
         python_expression_globals['UUID'] = UUID
         UUID_ = parser.parse_definition_value('python:UUID')
         self.assertTrue(UUID_ is UUID)
+
         class CustomUUID(UUID):
             pass
+
         parser.expression_globals['UUID'] = CustomUUID
         UUID_ = parser.parse_definition_value('python:UUID')
         self.assertTrue(UUID_ is CustomUUID)
@@ -253,14 +257,18 @@ class TestYAML(YafowilTestCase):
             file.write(self.yaml_tmpl)
         context = DummyContext()
         form = parse_from_YAML(template_path, context, _)
-        self.assertEqual(form.treerepr().split('\n'), [
-            "<class 'yafowil.base.Widget'>: demoform",
-            "  <class 'yafowil.base.Widget'>: firstfield",
-            "  <class 'yafowil.base.Widget'>: secondfield",
-            ""
-        ])
+        self.assertEqual(
+            form.treerepr().split('\n'),
+            [
+                "<class 'yafowil.base.Widget'>: demoform",
+                "  <class 'yafowil.base.Widget'>: firstfield",
+                "  <class 'yafowil.base.Widget'>: secondfield",
+                '',
+            ],
+        )
         self.assertEqual(sorted(form.attrs.items()), [('action', 'demoaction')])
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <div class="field" id="field-demoform-firstfield">
@@ -292,7 +300,9 @@ class TestYAML(YafowilTestCase):
             </select>
           </div>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     def test_parse_from_yaml_custom_extractors(self):
         template_path = os.path.join(self.tempdir, 'tmpl.yaml')
@@ -305,15 +315,14 @@ class TestYAML(YafowilTestCase):
     def test_parse_from_yaml_package_path(self):
         self.assertEqual(
             translate_path('yafowil.yaml:tests/__init__.py'),
-            os.path.join(os.path.dirname(__file__), '__init__.py')
+            os.path.join(os.path.dirname(__file__), '__init__.py'),
         )
 
     def test_parse_attribute(self):
         parser = YAMLParser(None, message_factory=_)
         self.assertEqual(parser.parse_attribute('python:1 + 1'), 2)
         self.assertEqual(
-            parser.parse_attribute({'a': {'b': 'python:1 + 1'}}),
-            {'a': {'b': 2}}
+            parser.parse_attribute({'a': {'b': 'python:1 + 1'}}), {'a': {'b': 2}}
         )
 
     def test_yaml_form_flat(self):
@@ -332,14 +341,17 @@ class TestYAML(YafowilTestCase):
             file.write(raw)
         context = DummyContext()
         form = YAMLParser(template_path, context=context)()
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <input class="text" id="input-demoform-firstfield"
                  name="demoform.firstfield" type="text"
                  value="context.some_attr"/>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     def test_yaml_form_compounds(self):
         raw = """
@@ -366,7 +378,8 @@ class TestYAML(YafowilTestCase):
             file.write(raw)
         context = DummyContext()
         form = YAMLParser(template_path, context=context)()
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="demoaction" enctype="multipart/form-data"
               id="form-demoform" method="post" novalidate="novalidate">
           <table>
@@ -380,7 +393,9 @@ class TestYAML(YafowilTestCase):
             </tr>
           </table>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     yaml_main_tmpl = """
         factory: form
@@ -408,13 +423,16 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="nested_input text" id="input-mainform-sub"
                  name="mainform.sub" type="text" value="context.some_attr"/>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     def test_nested_form_structural_compound(self):
         # Create nested form, case structural compound
@@ -435,14 +453,17 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="text" id="input-mainform-subfieldname"
                  name="mainform.subfieldname" type="text"
                  value="subfieldvalue"/>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     def test_nested_form_non_structural_compound(self):
         # Create nested form, case non structural compound
@@ -460,13 +481,16 @@ class TestYAML(YafowilTestCase):
             file.write(nested_raw)
         context = DummyContext()
         form = YAMLParser(main_path, context=context)()
-        self.checkOutput("""
+        self.checkOutput(
+            """
         <form action="mainformaction" enctype="multipart/form-data"
               id="form-mainform" method="post" novalidate="novalidate">
           <input class="text" id="input-mainform-sub-fieldname"
                  name="mainform.sub.fieldname" type="text" value=""/>
         </form>
-        """, fxml(form()))
+        """,
+            fxml(form()),
+        )
 
     def test_traceback_supplement(self):
         # Traceback supplement
@@ -542,15 +566,18 @@ class TestYAML(YafowilTestCase):
             file.write(self.json_tmpl)
         context = DummyContext()
         form = YAMLParser(json_file, context=context, message_factory=_)()
-        self.assertEqual(form.treerepr().split('\n'), [
-            "<class 'yafowil.base.Widget'>: demoform",
-            "  <class 'yafowil.base.Widget'>: firstfield",
-            "  <class 'yafowil.base.Widget'>: secondfield",
-            ""
-        ])
+        self.assertEqual(
+            form.treerepr().split('\n'),
+            [
+                "<class 'yafowil.base.Widget'>: demoform",
+                "  <class 'yafowil.base.Widget'>: firstfield",
+                "  <class 'yafowil.base.Widget'>: secondfield",
+                '',
+            ],
+        )
         trash_file = os.path.join(self.tempdir, 'trash.json')
         with open(trash_file, 'w') as file:
-            file.write("{]")
+            file.write('{]')
         parser = YAMLParser(trash_file, context=context, message_factory=_)
         with self.assertRaises(JSONTransformationError) as arc:
             parser()
@@ -565,18 +592,15 @@ class TestYAML(YafowilTestCase):
 
 
 class TestSphinxDocumentation(YafowilTestCase):
-
     def test_sphinx_rst_examples(self):
         result = doctest.testfile(
             os.path.join(os.path.dirname(__file__), '..', 'sphinx.rst'),
             module_relative=False,
             optionflags=(
-                doctest.NORMALIZE_WHITESPACE |
-                doctest.ELLIPSIS |
-                doctest.REPORT_ONLY_FIRST_FAILURE
+                doctest.NORMALIZE_WHITESPACE
+                | doctest.ELLIPSIS
+                | doctest.REPORT_ONLY_FIRST_FAILURE
             ),
-            globs={
-                'pxml': pxml
-            }
+            globs={'pxml': pxml},
         )
         self.assertEqual(result.failed, 0)
