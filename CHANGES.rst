@@ -1,7 +1,7 @@
 Changes
 =======
 
-3.0.1 (unreleased)
+3.0.1 (2026-10-31)
 ------------------
 
 - Resolve package paths with ``importlib.resources.files`` instead of the
